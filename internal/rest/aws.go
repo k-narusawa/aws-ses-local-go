@@ -25,8 +25,6 @@ func NewAwsHandler(e *echo.Echo, awsService AwsService) {
 }
 
 func (h *AwsHandler) SendEmail(c echo.Context) error {
-	request := c.Request()
-	log.Printf("Request: %v", request)
 	action := c.FormValue("Action")
 	in := aws.SendEmailInput{
 		Action:               action,
