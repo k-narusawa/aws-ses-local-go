@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"errors"
 	"aws-ses-local-go/domain"
+	"errors"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
