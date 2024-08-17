@@ -17,7 +17,6 @@ func NewService(
 }
 
 type SendEmailInput struct {
-	Action               string
 	Version              string
 	ConfigurationSetName string
 	ToAddresses          string
@@ -37,7 +36,6 @@ type SendEmailInput struct {
 	Tags                 string
 	Destination          string
 	FromArn              string
-	RawMessage           string
 }
 
 type SendEmailOutput struct {
@@ -45,27 +43,37 @@ type SendEmailOutput struct {
 }
 
 func (s *Service) SendEmail(in SendEmailInput) (*SendEmailOutput, error) {
-	if in.Action == "SendEmail" {
-		mail := domain.NewMail(
-			in.Source,
-			&in.ToAddresses,
-			&in.CcAddresses,
-			&in.BccAddresses,
-			in.SubjectData,
-			&in.TextData,
-			&in.HtmlData,
-			nil,
-			nil,
-		)
+	mail := domain.NewMail(
+		in.Source,
+		&in.ToAddresses,
+		&in.CcAddresses,
+		&in.BccAddresses,
+		in.SubjectData,
+		&in.TextData,
+		&in.HtmlData,
+		nil,
+		nil,
+	)
 
-		err := s.MailRepo.Store(mail)
-		if err != nil {
-			return nil, err
-		}
-
-		return &SendEmailOutput{MessageID: mail.MessageID}, nil
+	err := s.MailRepo.Store(mail)
+	if err != nil {
+		return nil, err
 	}
 
+	return &SendEmailOutput{MessageID: mail.MessageID}, nil
+}
+
+type SendRawEmailInput struct {
+	Version     string
+	Source      string
+	SourceArn   string
+	Tags        string
+	Destination string
+	FromArn     string
+	RawMessage  string
+}
+
+func (s *Service) SendRawEmail(in SendRawEmailInput) (*SendEmailOutput, error) {
 	mail := domain.FromRawEmailRequest(in.RawMessage)
 
 	err := s.MailRepo.Store(mail)
