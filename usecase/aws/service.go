@@ -2,7 +2,6 @@ package aws
 
 import (
 	"aws-ses-local-go/domain"
-	"log"
 )
 
 type Service struct {
@@ -46,7 +45,6 @@ type SendEmailOutput struct {
 }
 
 func (s *Service) SendEmail(in SendEmailInput) (*SendEmailOutput, error) {
-	log.Printf("Action: %s, RawMessage: %s", in.Action, in.RawMessage)
 	if in.Action == "SendEmail" {
 		mail := domain.NewMail(
 			in.Source,
@@ -65,15 +63,15 @@ func (s *Service) SendEmail(in SendEmailInput) (*SendEmailOutput, error) {
 			return nil, err
 		}
 
-		return &SendEmailOutput{
-			MessageID: mail.MessageID,
-		}, nil
+		return &SendEmailOutput{MessageID: mail.MessageID}, nil
 	}
 
 	mail := domain.FromRawEmailRequest(in.RawMessage)
 
-	return &SendEmailOutput{
-		MessageID: mail.MessageID,
-	}, nil
+	err := s.MailRepo.Store(mail)
+	if err != nil {
+		return nil, err
+	}
 
+	return &SendEmailOutput{MessageID: mail.MessageID}, nil
 }
