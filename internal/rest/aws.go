@@ -25,28 +25,31 @@ func NewAwsHandler(e *echo.Echo, awsService AwsService) {
 }
 
 func (h *AwsHandler) SendEmail(c echo.Context) error {
+	request := c.Request()
+	log.Printf("Request: %v", request)
+	action := c.FormValue("Action")
 	in := aws.SendEmailInput{
-		Action:               c.QueryParam("Action"),
-		Version:              c.QueryParam("Version"),
-		ConfigurationSetName: c.QueryParam("ConfigurationSetName"),
-		ToAddresses:          c.QueryParam("Destination.ToAddresses.member.1"),
-		CcAddresses:          c.QueryParam("Destination.CcAddresses.member.1"),
-		BccAddresses:         c.QueryParam("Destination.BccAddresses.member.1"),
-		HtmlData:             c.QueryParam("Message.Body.Html.Data"),
-		HtmlCharset:          c.QueryParam("Message.Body.Html.Charset"),
-		TextData:             c.QueryParam("Message.Body.Text.Data"),
-		TextCharset:          c.QueryParam("Message.Body.Text.Charset"),
-		SubjectData:          c.QueryParam("Message.Subject.Data"),
-		SubjectCharset:       c.QueryParam("Message.Subject.Charset"),
-		ReplyToAddresses:     c.QueryParam("ReplyToAddresses.member.1"),
-		ReturnPath:           c.QueryParam("ReturnPath"),
-		ReturnPathArn:        c.QueryParam("ReturnPathArn"),
-		Source:               c.QueryParam("Source"),
-		SourceArn:            c.QueryParam("SourceArn"),
-		Tags:                 c.QueryParam("Tags.member.1"),
-		Destination:          c.QueryParam("Destination.member.1"),
-		FromArn:              c.QueryParam("FromArn"),
-		RawMessage:           c.QueryParam("RawMessage.Data"),
+		Action:               action,
+		Version:              c.FormValue("Version"),
+		ConfigurationSetName: c.FormValue("ConfigurationSetName"),
+		ToAddresses:          c.FormValue("Destination.ToAddresses.member.1"),
+		CcAddresses:          c.FormValue("Destination.CcAddresses.member.1"),
+		BccAddresses:         c.FormValue("Destination.BccAddresses.member.1"),
+		HtmlData:             c.FormValue("Message.Body.Html.Data"),
+		HtmlCharset:          c.FormValue("Message.Body.Html.Charset"),
+		TextData:             c.FormValue("Message.Body.Text.Data"),
+		TextCharset:          c.FormValue("Message.Body.Text.Charset"),
+		SubjectData:          c.FormValue("Message.Subject.Data"),
+		SubjectCharset:       c.FormValue("Message.Subject.Charset"),
+		ReplyToAddresses:     c.FormValue("ReplyToAddresses.member.1"),
+		ReturnPath:           c.FormValue("ReturnPath"),
+		ReturnPathArn:        c.FormValue("ReturnPathArn"),
+		Source:               c.FormValue("Source"),
+		SourceArn:            c.FormValue("SourceArn"),
+		Tags:                 c.FormValue("Tags.member.1"),
+		Destination:          c.FormValue("Destination.member.1"),
+		FromArn:              c.FormValue("FromArn"),
+		RawMessage:           c.FormValue("RawMessage.Data"),
 	}
 
 	out, err := h.AwsService.SendEmail(in)
@@ -55,7 +58,11 @@ func (h *AwsHandler) SendEmail(c echo.Context) error {
 	}
 
 	log.Printf("MessageID: %s", out.MessageID)
+	if action == "SendEmail" {
+		resp := fmt.Sprintf(`<SendEmailResponse xmlns="http://ses.amazonaws.com/doc/2010-12-01/"><SendEmailResult><MessageId>%s</MessageId></SendEmailResult></SendEmailResponse>`, out.MessageID)
+		return c.XMLBlob(200, []byte(resp))
+	}
 
-	resp := fmt.Sprintf(`<SendEmailResponse xmlns="http://ses.amazonaws.com/doc/2010-12-01/"><SendEmailResult><MessageId>%s</MessageId></SendEmailResult></SendEmailResponse>`, out.MessageID)
+	resp := fmt.Sprintf(`<SendRawEmailResponse xmlns="http://ses.amazonaws.com/doc/2010-12-01/"><SendRawEmailResult><MessageId>%s</MessageId></SendRawEmailResult></SendRawEmailResponse>`, out.MessageID)
 	return c.XMLBlob(200, []byte(resp))
 }
