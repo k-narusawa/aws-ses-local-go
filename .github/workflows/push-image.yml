@@ -23,4 +23,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/aws-ses-local-go:${{ env.TAG_NAME }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/aws-ses-local-go:${{ github.ref_name }}
