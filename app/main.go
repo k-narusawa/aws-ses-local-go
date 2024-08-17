@@ -3,9 +3,7 @@ package main
 import (
 	"aws-ses-local-go/internal/repository"
 	"aws-ses-local-go/internal/rest"
-	"aws-ses-local-go/internal/web"
-	"aws-ses-local-go/usecase/todo"
-	"aws-ses-local-go/usecase/user"
+	"aws-ses-local-go/usecase/aws"
 	"html/template"
 	"io"
 	"log"
@@ -46,15 +44,10 @@ func main() {
 
 	e.Renderer = t
 
-	userRepo := repository.NewUserRepository()
-	todoRepo := repository.NewToDoRepository()
-	userSvc := user.NewService(userRepo)
-	todoSvc := todo.NewService(todoRepo, userRepo)
+	mailRepo := repository.NewMailRepository()
+	awsSvc := aws.NewService(mailRepo)
 
-	rest.NewUserHandler(e, userSvc)
-	rest.NewToDoHandler(e, todoSvc)
-
-	web.NewWebUserHandler(e, userSvc, todoSvc)
+	rest.NewAwsHandler(e, awsSvc)
 
 	e.GET("/health", healthCheck)
 
