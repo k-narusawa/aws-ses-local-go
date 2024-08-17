@@ -14,3 +14,9 @@
     --text "body" \
     --endpoint-url "http://localhost:8080"
     ```
+
+    ```shell
+    aws ses send-raw-email \
+    --raw-message file://./scripts/message.json \
+    --endpoint-url "http://localhost:8080"
+    ```
