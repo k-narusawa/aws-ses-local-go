@@ -24,4 +24,4 @@ build:
 	@ echo "done"
 
 dev-build:
-	docker build -f Dockerfile.dev -t go-app-template .
+	docker build -f Dockerfile.dev -t aws-ses-local-go .

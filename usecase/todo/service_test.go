@@ -1,10 +1,10 @@
 package todo_test
 
 import (
-	"go-app-template/domain"
-	"go-app-template/domain/value"
-	"go-app-template/usecase/mocks"
-	"go-app-template/usecase/todo"
+	"aws-ses-local-go/domain"
+	"aws-ses-local-go/domain/value"
+	"aws-ses-local-go/usecase/mocks"
+	"aws-ses-local-go/usecase/todo"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

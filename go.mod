@@ -1,4 +1,4 @@
-module go-app-template
+module aws-ses-local-go
 
 go 1.22.2
 

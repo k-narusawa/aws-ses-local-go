@@ -1,9 +1,9 @@
 package user
 
 import (
-	"go-app-template/domain"
-	"go-app-template/domain/repository"
-	"go-app-template/domain/value"
+	"aws-ses-local-go/domain"
+	"aws-ses-local-go/domain/repository"
+	"aws-ses-local-go/domain/value"
 )
 
 type Service struct {

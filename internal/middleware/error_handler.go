@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"errors"
-	"go-app-template/domain"
+	"aws-ses-local-go/domain"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"

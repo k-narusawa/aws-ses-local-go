@@ -1,5 +1,5 @@
 profile: cover.short.profile,cover.long.profile
-local-prefix: "github.com/k-narusawa/go-app-template"
+local-prefix: "github.com/k-narusawa/aws-ses-local-go"
 # threshold:
 #   file: 100
 #   total: 95

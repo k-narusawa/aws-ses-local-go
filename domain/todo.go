@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"go-app-template/domain/value"
+	"aws-ses-local-go/domain/value"
 )
 
 type ToDo struct {
