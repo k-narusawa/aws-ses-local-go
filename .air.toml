@@ -1,0 +1,29 @@
+root = "."
+tmp_dir = "tmp_app"
+
+[build]
+cmd = "go build -o ./tmp_app/app/engine -buildvcs=false ./app/."
+bin = "tmp_app/app"
+full_bin = "./tmp_app/app/engine"
+log = "air_errors.log"
+include_ext = ["go", "yaml", "toml"]
+exclude_regex = ["_test\\.go"]
+delay = 1000 
+poll = true
+
+[watch]
+includes = ["."]
+excludes = ["tmp", "vendor", "node_modules"]
+
+[log]
+level = "debug"
+time = true
+
+[color]
+main = "magenta"
+watcher = "cyan"
+build = "yellow"
+runner = "green"
+
+[misc]
+clean_on_exit = true

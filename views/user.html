@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Go App Template</title>
+  </head>
+  <body>
+    <h1>Users</h1>
+    <ul>
+      {{ range . }}
+      <li>{{ .Name }}</li>
+      {{ end }}
+    </ul>
+  </body>
+</html>

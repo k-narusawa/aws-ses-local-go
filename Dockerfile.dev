@@ -1,0 +1,14 @@
+FROM golang:1.22.3-alpine3.18 AS builder
+
+RUN apk update && apk upgrade && \
+    apk --update add git make bash build-base
+
+WORKDIR /app
+
+RUN go install github.com/air-verse/air@latest
+
+COPY . .
+
+RUN go mod download
+
+CMD ["air"]

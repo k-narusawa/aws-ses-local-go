@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+    environment:
+      - AIR_GO_MOD=true
+      - AIR_TMP_DIR=/tmp/air
