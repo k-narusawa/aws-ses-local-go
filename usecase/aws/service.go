@@ -2,12 +2,7 @@ package aws
 
 import (
 	"aws-ses-local-go/domain"
-	"bufio"
-	"bytes"
-	"encoding/base64"
 	"log"
-	"net/mail"
-	"strings"
 )
 
 type Service struct {
@@ -75,54 +70,10 @@ func (s *Service) SendEmail(in SendEmailInput) (*SendEmailOutput, error) {
 		}, nil
 	}
 
-	decodedData, err := base64.StdEncoding.DecodeString(in.RawMessage)
-
-	if err != nil {
-		log.Fatalf("failed to decode base64: %v", err)
-	}
-
-	message := parseRawEmail(string(decodedData))
-	to := message.Header.Get("To")
-	listUnsubscribeUrl := strings.Join(message.Header["List-Unsubscribe"], ",")
-	listUnsubscribePost := strings.Join(message.Header["List-Unsubscribe-Post"], ",")
-
-	body := getBody(message)
-	mail := domain.NewMail(
-		message.Header.Get("From"),
-		&to,
-		nil,
-		nil,
-		message.Header.Get("Subject"),
-		&body,
-		nil,
-		&listUnsubscribeUrl,
-		&listUnsubscribePost,
-	)
-
-	err = s.MailRepo.Store(mail)
-	if err != nil {
-		return nil, err
-	}
+	mail := domain.FromRawEmailRequest(in.RawMessage)
 
 	return &SendEmailOutput{
 		MessageID: mail.MessageID,
 	}, nil
 
-}
-
-func parseRawEmail(rawEmail string) *mail.Message {
-	reader := bufio.NewReader(bytes.NewReader([]byte(rawEmail)))
-	message, err := mail.ReadMessage(reader)
-	if err != nil {
-		log.Fatalf("failed to parse raw email: %v", err)
-	}
-	return message
-}
-
-func getBody(message *mail.Message) string {
-	body, err := bufio.NewReader(message.Body).ReadString('\n')
-	if err != nil {
-		log.Fatalf("failed to read email body: %v", err)
-	}
-	return body
 }
