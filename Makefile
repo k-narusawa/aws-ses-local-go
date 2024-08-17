@@ -25,3 +25,7 @@ build:
 
 dev-build:
 	docker build -f Dockerfile.dev -t aws-ses-local-go .
+
+cli-test:
+	bash scripts/check_v1_send_email.sh
+	bash scripts/check_v1_send_raw_email.sh
