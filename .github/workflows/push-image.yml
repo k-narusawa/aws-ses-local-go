@@ -2,6 +2,11 @@ name: Build and Push to Docker Hub
 
 on:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Docker image tag"
+        required: true
+        default: "latest"
 
 jobs:
   docker:
@@ -23,4 +28,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/aws-ses-local-go:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/aws-ses-local-go:${{ env.TAG }}
