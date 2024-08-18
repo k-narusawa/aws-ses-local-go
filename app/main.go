@@ -4,6 +4,7 @@ import (
 	"aws-ses-local-go/internal/repository"
 	"aws-ses-local-go/internal/rest"
 	v1 "aws-ses-local-go/usecase/aws/v1"
+	v2 "aws-ses-local-go/usecase/aws/v2"
 	"html/template"
 	"io"
 	"log"
@@ -46,8 +47,9 @@ func main() {
 
 	mailRepo := repository.NewMailRepository()
 	v1Svc := v1.NewService(mailRepo)
+	v2Svc := v2.NewService(mailRepo)
 
-	rest.NewAwsHandler(e, v1Svc)
+	rest.NewAwsHandler(e, v1Svc, v2Svc)
 
 	e.GET("/health", healthCheck)
 
