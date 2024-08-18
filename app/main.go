@@ -2,10 +2,10 @@ package main
 
 import (
 	"aws-ses-local-go/config"
-	"aws-ses-local-go/internal/dao"
-	"aws-ses-local-go/internal/query"
-	"aws-ses-local-go/internal/repository"
-	"aws-ses-local-go/internal/rest"
+	"aws-ses-local-go/internal/controllers/rest"
+	"aws-ses-local-go/internal/gateways/dao"
+	"aws-ses-local-go/internal/gateways/query"
+	"aws-ses-local-go/internal/gateways/repository"
 	v1 "aws-ses-local-go/usecase/aws/v1"
 	v2 "aws-ses-local-go/usecase/aws/v2"
 	"html/template"

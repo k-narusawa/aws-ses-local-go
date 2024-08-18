@@ -1,7 +1,7 @@
 package query
 
 import (
-	"aws-ses-local-go/internal/dao"
+	"aws-ses-local-go/internal/gateways/dao"
 	"aws-ses-local-go/usecase/query"
 )
 

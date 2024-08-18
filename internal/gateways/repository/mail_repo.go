@@ -2,7 +2,7 @@ package repository
 
 import (
 	"aws-ses-local-go/domain"
-	"aws-ses-local-go/internal/dao"
+	"aws-ses-local-go/internal/gateways/dao"
 )
 
 type MailRepository struct {
