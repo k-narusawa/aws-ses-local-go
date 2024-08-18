@@ -39,4 +39,5 @@ func TestV2() {
 	})
 
 	v2.SendSimpleEmail(svc)
+	v2.SendRawEmail(svc)
 }
