@@ -4,7 +4,7 @@ AWS_ENDPOINT_URL="http://localhost:8080"
 
 aws ses send-raw-email \
   --raw-message file://./scripts/message.json \
-  --endpoint-url "http://localhost:8080"
+  --endpoint-url "http://localhost:8080" > /dev/null
 
 if [ $? -eq 0 ]; then
   echo "Test succeeded: SES mock responded correctly."
