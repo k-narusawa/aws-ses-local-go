@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	// TestV1()
+	TestV1()
 	TestV2()
 }
 

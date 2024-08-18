@@ -34,5 +34,5 @@ func SendSimpleEmail(client *sesv2.Client) {
 		panic(err)
 	}
 
-	fmt.Println("SendEmail is OK. MessageID: ", *result.MessageId)
+	fmt.Println("SendSimpleEmail is OK. MessageID: ", *result.MessageId)
 }
