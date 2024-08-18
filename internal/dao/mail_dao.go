@@ -1,18 +1,18 @@
 package dao
 
-import "aws-ses-local-go/domain"
+import (
+	"aws-ses-local-go/domain"
 
-var (
-	mails = map[string]*domain.Mail{}
+	"gorm.io/gorm"
 )
+type MailDao struct {
+	db *gorm.DB
+}
 
-type MailDao struct{}
-
-func NewMailDao() *MailDao {
-	return &MailDao{}
+func NewMailDao(db *gorm.DB) *MailDao {
+	return &MailDao{db: db}
 }
 
 func (d *MailDao) Store(mail domain.Mail) error {
-	mails[mail.MessageID] = &mail
-	return nil
+	return d.db.Create(&mail).Error
 }

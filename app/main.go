@@ -1,6 +1,7 @@
 package main
 
 import (
+	"aws-ses-local-go/config"
 	"aws-ses-local-go/internal/dao"
 	"aws-ses-local-go/internal/repository"
 	"aws-ses-local-go/internal/rest"
@@ -50,7 +51,9 @@ func main() {
 
 	e.Renderer = t
 
-	mailDao := dao.NewMailDao()
+	db := config.DBConnect()
+
+	mailDao := dao.NewMailDao(db)
 	mailRepo := repository.NewMailRepository(*mailDao)
 	v1Svc := v1.NewService(mailRepo)
 	v2Svc := v2.NewService(mailRepo)

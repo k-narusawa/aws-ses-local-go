@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/mail"
 	"strings"
+	"time"
 
 	"math/rand"
 )
@@ -23,6 +24,7 @@ type Mail struct {
 	Html                *string
 	ListUnsubscribePost *string
 	ListUnsubscribeUrl  *string
+	CreatedAt           time.Time
 }
 
 func NewMail(
@@ -47,6 +49,7 @@ func NewMail(
 		Html:                html,
 		ListUnsubscribePost: listUnsubscribePost,
 		ListUnsubscribeUrl:  listUnsubscribeUrl,
+		CreatedAt:           time.Now(),
 	}
 }
 
@@ -78,6 +81,7 @@ func FromRawEmailRequest(rawMessage string) (Mail, error) {
 		Text:                &body,
 		ListUnsubscribeUrl:  &listUnsubscribeUrl,
 		ListUnsubscribePost: &listUnsubscribePost,
+		CreatedAt:           time.Now(),
 	}, nil
 }
 
