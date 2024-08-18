@@ -30,3 +30,6 @@ aws sesv2 send-email \
 --content "Simple={Subject={Data=MailTitle,Charset=utf-8},Body={Text={Data=Test,Charset=utf-8}}}" \
 --endpoint-url "http://localhost:8080"
 ```
+
+## other
+- [docker hub](https://hub.docker.com/repository/docker/19992240/aws-ses-local-go/general)
