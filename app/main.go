@@ -1,6 +1,7 @@
 package main
 
 import (
+	"aws-ses-local-go/internal/dao"
 	"aws-ses-local-go/internal/repository"
 	"aws-ses-local-go/internal/rest"
 	v1 "aws-ses-local-go/usecase/aws/v1"
@@ -37,8 +38,9 @@ func main() {
 	e := echo.New()
 
 	t := &Template{
-		templates: template.Must(template.ParseGlob("views/*.html")),
+		templates: template.Must(template.ParseGlob("template/dist/*.html")),
 	}
+	e.Static("/", "template/dist")
 
 	e.Use(middleware.CORS())
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
@@ -48,7 +50,8 @@ func main() {
 
 	e.Renderer = t
 
-	mailRepo := repository.NewMailRepository()
+	mailDao := dao.NewMailDao()
+	mailRepo := repository.NewMailRepository(*mailDao)
 	v1Svc := v1.NewService(mailRepo)
 	v2Svc := v2.NewService(mailRepo)
 

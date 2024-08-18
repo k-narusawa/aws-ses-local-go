@@ -1,25 +1,26 @@
 package repository
 
-import "aws-ses-local-go/domain"
-
-var (
-	mails = map[string]*domain.Mail{}
+import (
+	"aws-ses-local-go/domain"
+	"aws-ses-local-go/internal/dao"
 )
 
-type MailRepository struct{}
+type MailRepository struct {
+	MailDao dao.MailDao
+}
 
-func NewMailRepository() *MailRepository {
-	return &MailRepository{}
+func NewMailRepository(
+	mailDao dao.MailDao,
+) *MailRepository {
+	return &MailRepository{
+		MailDao: mailDao,
+	}
 }
 
 func (r *MailRepository) Store(mail domain.Mail) error {
-	mails[mail.MessageID] = &mail
+	err := r.MailDao.Store(mail)
+	if err != nil {
+		return err
+	}
 	return nil
 }
-
-// <?xml version="1.0" encoding="UTF-8"?>
-// <SendRawEmailResponse xmlns="http://ses.amazonaws.com/doc/2010-12-01/">
-// 	<SendRawEmailResult>
-// 		<MessageId>ses-899841303</MessageId>
-// 	</SendRawEmailResult>
-// </SendRawEmailResponse>
