@@ -1,7 +1,7 @@
 package config
 
 import (
-	"aws-ses-local-go/internal/dao"
+	"aws-ses-local-go/domain"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -13,7 +13,7 @@ func DBConnect() *gorm.DB {
 		panic("failed to connect database")
 	}
 
-	db.AutoMigrate(&dao.MailRecord{})
+	db.AutoMigrate(&domain.Mail{})
 
 	return db
 }

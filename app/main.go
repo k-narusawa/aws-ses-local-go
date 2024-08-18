@@ -3,6 +3,7 @@ package main
 import (
 	"aws-ses-local-go/config"
 	"aws-ses-local-go/internal/dao"
+	"aws-ses-local-go/internal/query"
 	"aws-ses-local-go/internal/repository"
 	"aws-ses-local-go/internal/rest"
 	v1 "aws-ses-local-go/usecase/aws/v1"
@@ -55,10 +56,13 @@ func main() {
 
 	mailDao := dao.NewMailDao(db)
 	mailRepo := repository.NewMailRepository(*mailDao)
+
 	v1Svc := v1.NewService(mailRepo)
 	v2Svc := v2.NewService(mailRepo)
+	mailQSvc := query.NewMailDtoQueryService(*mailDao)
 
 	rest.NewAwsHandler(e, v1Svc, v2Svc)
+	rest.NewMailHandler(e, mailQSvc)
 
 	e.GET("/health", healthCheck)
 
