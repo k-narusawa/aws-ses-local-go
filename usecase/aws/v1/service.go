@@ -16,32 +16,6 @@ func NewService(
 	}
 }
 
-type SendEmailInput struct {
-	Version              string
-	ConfigurationSetName string
-	ToAddresses          string
-	CcAddresses          string
-	BccAddresses         string
-	HtmlData             string
-	HtmlCharset          string
-	TextData             string
-	TextCharset          string
-	SubjectData          string
-	SubjectCharset       string
-	ReplyToAddresses     string
-	ReturnPath           string
-	ReturnPathArn        string
-	Source               string
-	SourceArn            string
-	Tags                 string
-	Destination          string
-	FromArn              string
-}
-
-type SendEmailOutput struct {
-	MessageID string
-}
-
 func (s *Service) SendEmail(in SendEmailInput) (*SendEmailOutput, error) {
 	mail := domain.NewMail(
 		in.Source,
