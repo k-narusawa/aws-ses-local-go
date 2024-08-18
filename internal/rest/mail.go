@@ -23,21 +23,28 @@ func NewMailHandler(
 	e.GET("/emails", handler.GetMails)
 }
 
+type MailResponse struct {
+	Page  int             `json:"page"`
+	Limit int             `json:"limit"`
+	Size  int             `json:"size"`
+	Items []query.MailDto `json:"items"`
+}
+
 func (h *MailHandler) GetMails(c echo.Context) error {
-	page := c.QueryParam("page")
-	size := c.QueryParam("size")
+	qPage := c.QueryParam("page")
+	qLimit := c.QueryParam("limit")
 	to := c.QueryParam("to_address")
 
-	if page == "" {
-		page = "0"
+	if qPage == "" {
+		qPage = "0"
 	}
 
-	if size == "" {
-		size = "10"
+	if qLimit == "" {
+		qLimit = "10"
 	}
 
-	limit, _ := strconv.Atoi(size)
-	isize, _ := strconv.Atoi(page)
+	isize, _ := strconv.Atoi(qPage)
+	limit, _ := strconv.Atoi(qLimit)
 	offset := isize * limit
 
 	mails, err := h.MailDtoQueryService.FindByTo(&to, limit, offset)
@@ -45,5 +52,12 @@ func (h *MailHandler) GetMails(c echo.Context) error {
 		return c.JSON(500, err)
 	}
 
-	return c.JSON(200, mails)
+	resp := MailResponse{
+		Page:  isize,
+		Limit: limit,
+		Size:  len(mails),
+		Items: mails,
+	}
+
+	return c.JSON(200, resp)
 }
