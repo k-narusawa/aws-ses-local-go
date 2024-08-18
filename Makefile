@@ -1,3 +1,4 @@
+.PHONY: test
 dev:
 	docker-compose up
 
