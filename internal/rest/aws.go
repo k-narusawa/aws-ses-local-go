@@ -15,6 +15,7 @@ type V1Service interface {
 
 type V2Service interface {
 	SendSimpleEmail(in v2.V2EmailOutboundEmailInput) (*v2.SendEmailV2Output, error)
+	SendRawEmail(in v2.V2EmailOutboundEmailInput) (*v2.SendEmailV2Output, error)
 }
 
 type AwsHandler struct {
@@ -104,5 +105,14 @@ func (h *AwsHandler) SendEmailV2(c echo.Context) error {
 		return c.JSON(200, out)
 	}
 
-	return c.JSON(200, "SendRawEmail")
+	if in.Content.Raw != nil {
+		out, err := h.V2Service.SendRawEmail(*in)
+		if err != nil {
+			return c.JSON(500, err)
+		}
+
+		return c.JSON(200, out)
+	}
+
+	return c.JSON(400, "Invalid content")
 }

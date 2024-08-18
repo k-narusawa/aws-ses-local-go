@@ -50,3 +50,17 @@ func (s *Service) SendSimpleEmail(in V2EmailOutboundEmailInput) (*SendEmailV2Out
 
 	return &SendEmailV2Output{MessageID: mail.MessageID}, nil
 }
+
+func (s *Service) SendRawEmail(in V2EmailOutboundEmailInput) (*SendEmailV2Output, error) {
+	mail, err := domain.FromRawEmailRequest(in.Content.Raw.Data)
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.MailRepo.Store(mail)
+	if err != nil {
+		return nil, err
+	}
+
+	return &SendEmailV2Output{MessageID: mail.MessageID}, nil
+}

@@ -48,9 +48,12 @@ type SendRawEmailInput struct {
 }
 
 func (s *Service) SendRawEmail(in SendRawEmailInput) (*SendEmailOutput, error) {
-	mail := domain.FromRawEmailRequest(in.RawMessage)
+	mail, err := domain.FromRawEmailRequest(in.RawMessage)
+	if err != nil {
+		return nil, err
+	}
 
-	err := s.MailRepo.Store(mail)
+	err = s.MailRepo.Store(mail)
 	if err != nil {
 		return nil, err
 	}

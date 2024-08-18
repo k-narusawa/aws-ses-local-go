@@ -1,10 +1,10 @@
 package domain
 
 import (
-	"bufio"
 	"bytes"
 	"encoding/base64"
 	"fmt"
+	"io"
 	"log"
 	"net/mail"
 	"strings"
@@ -50,17 +50,25 @@ func NewMail(
 	}
 }
 
-func FromRawEmailRequest(rawMessage string) Mail {
+func FromRawEmailRequest(rawMessage string) (Mail, error) {
 	decodedData, err := base64.StdEncoding.DecodeString(rawMessage)
 	if err != nil {
-		log.Fatalf("failed to decode base64: %v", err)
+		log.Printf("failed to decode base64: %v", err)
+		return Mail{}, err
 	}
 
-	message := parseRawEmail(string(decodedData))
+	message, err := parseRawEmail(string(decodedData))
+	if err != nil {
+		log.Printf("failed to parse raw email: %v", err)
+		return Mail{}, err
+	}
 	to := message.Header.Get("To")
 	listUnsubscribeUrl := strings.Join(message.Header["List-Unsubscribe"], ",")
 	listUnsubscribePost := strings.Join(message.Header["List-Unsubscribe-Post"], ",")
-	body := getBody(message)
+	body, err := getBody(message)
+	if err != nil {
+		return Mail{}, err
+	}
 
 	return Mail{
 		MessageID:           generateMessageID(),
@@ -70,7 +78,7 @@ func FromRawEmailRequest(rawMessage string) Mail {
 		Text:                &body,
 		ListUnsubscribeUrl:  &listUnsubscribeUrl,
 		ListUnsubscribePost: &listUnsubscribePost,
-	}
+	}, nil
 }
 
 func generateMessageID() string {
@@ -80,19 +88,21 @@ func generateMessageID() string {
 	return messageId
 }
 
-func parseRawEmail(rawEmail string) *mail.Message {
-	reader := bufio.NewReader(bytes.NewReader([]byte(rawEmail)))
+func parseRawEmail(rawEmail string) (*mail.Message, error) {
+	reader := bytes.NewReader([]byte(rawEmail))
 	message, err := mail.ReadMessage(reader)
 	if err != nil {
-		log.Fatalf("failed to parse raw email: %v", err)
+		log.Printf("failed to parse raw email: %v", err)
+		return nil, err
 	}
-	return message
+	return message, nil
 }
 
-func getBody(message *mail.Message) string {
-	body, err := bufio.NewReader(message.Body).ReadString('\n')
+func getBody(message *mail.Message) (string, error) {
+	bodyBytes, err := io.ReadAll(message.Body)
 	if err != nil {
-		log.Fatalf("failed to read email body: %v", err)
+		log.Printf("failed to read body: %v", err)
+		return "", err
 	}
-	return body
+	return string(bodyBytes), nil
 }
