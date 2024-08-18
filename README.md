@@ -20,3 +20,13 @@ aws ses send-raw-email \
 --raw-message file://./scripts/message.json \
 --endpoint-url "http://localhost:8080"
 ```
+
+### v2
+
+```shell
+aws sesv2 send-email \
+--from-email-address "example@example.com" \
+--destination "ToAddresses=example@example.com" \
+--content "Simple={Subject={Data=MailTitle,Charset=utf-8},Body={Text={Data=Test,Charset=utf-8}}}" \
+--endpoint-url "http://localhost:8080"
+```

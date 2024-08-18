@@ -33,6 +33,7 @@ image-build:
 cli-test:
 	bash scripts/check_v1_send_email.sh
 	bash scripts/check_v1_send_raw_email.sh
+	bash scripts/check_v2_send_email.sh
 
 sdk-test:
 	go run test/sdk.go
