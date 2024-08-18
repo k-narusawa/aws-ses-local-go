@@ -1,15 +1,15 @@
 package rest
 
 import (
-	"aws-ses-local-go/usecase/aws"
+	v1 "aws-ses-local-go/usecase/aws/v1"
 	"fmt"
 
 	"github.com/labstack/echo/v4"
 )
 
 type AwsService interface {
-	SendEmail(aws.SendEmailInput) (*aws.SendEmailOutput, error)
-	SendRawEmail(aws.SendRawEmailInput) (*aws.SendEmailOutput, error)
+	SendEmail(v1.SendEmailInput) (*v1.SendEmailOutput, error)
+	SendRawEmail(v1.SendRawEmailInput) (*v1.SendEmailOutput, error)
 }
 
 type AwsHandler struct {
@@ -22,13 +22,14 @@ func NewAwsHandler(e *echo.Echo, awsService AwsService) {
 	}
 
 	e.POST("", handler.SendEmail)
+	e.POST("/v2/email/outbound-emails", handler.SendEmailV2)
 }
 
 func (h *AwsHandler) SendEmail(c echo.Context) error {
 	action := c.FormValue("Action")
 
 	if action == "SendEmail" {
-		in := aws.SendEmailInput{
+		in := v1.SendEmailInput{
 			Version:              c.FormValue("Version"),
 			ConfigurationSetName: c.FormValue("ConfigurationSetName"),
 			ToAddresses:          c.FormValue("Destination.ToAddresses.member.1"),
@@ -59,7 +60,7 @@ func (h *AwsHandler) SendEmail(c echo.Context) error {
 		return c.XMLBlob(200, []byte(resp))
 	} else if action == "SendRawEmail" {
 		rawMessage := c.FormValue("RawMessage.Data")
-		in := aws.SendRawEmailInput{
+		in := v1.SendRawEmailInput{
 			Version:     c.FormValue("Version"),
 			Source:      c.FormValue("Source"),
 			SourceArn:   c.FormValue("SourceArn"),
@@ -79,4 +80,8 @@ func (h *AwsHandler) SendEmail(c echo.Context) error {
 	}
 
 	return c.JSON(400, "Invalid action")
+}
+
+func (h *AwsHandler) SendEmailV2(c echo.Context) error {
+	return c.JSON(200, "SendRawEmail")
 }

@@ -1,4 +1,4 @@
-package aws
+package v1
 
 import (
 	"aws-ses-local-go/domain"
