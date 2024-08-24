@@ -7,13 +7,14 @@ function App() {
   const { getEmails } = useEmail();
   const [emails, setEmails] = useState<emails | null>(null);
   const [page, setPage] = useState<number>(1);
+  const [searchAddress, setSearchAddress] = useState<string>("");
 
   useEffect(() => {
     (async () => {
-      const resp = await getEmails(page, 10);
+      const resp = await getEmails(page, 10, searchAddress);
       setEmails(resp);
     })();
-  }, [getEmails, page]);
+  }, [getEmails, page, searchAddress]);
 
   if (!emails) {
     return <div>Loading...</div>;
@@ -21,7 +22,11 @@ function App() {
 
   return (
     <div className="p-4">
-      <EmailTable emails={emails} setPage={setPage} />
+      <EmailTable
+        emails={emails}
+        setPage={setPage}
+        setSearchAddress={setSearchAddress}
+      />
     </div>
   );
 }

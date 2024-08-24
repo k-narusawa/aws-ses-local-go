@@ -7,9 +7,10 @@ import { TableHeader } from "./TableHeader";
 type Props = {
   emails: emails;
   setPage: (page: number) => void;
+  setSearchAddress: (address: string) => void;
 };
 
-const EmailTable: React.FC<Props> = ({ emails, setPage }) => {
+const EmailTable: React.FC<Props> = ({ emails, setPage, setSearchAddress }) => {
   return (
     <>
       <div className="flex flex-col">
@@ -18,7 +19,7 @@ const EmailTable: React.FC<Props> = ({ emails, setPage }) => {
             <div className="border rounded-lg divide-y divide-gray-200">
               <div className="py-3 px-4">
                 <div className="relative max-w-xs">
-                  <SearchInput />
+                  <SearchInput setSearchAddress={setSearchAddress} />
                 </div>
               </div>
 
