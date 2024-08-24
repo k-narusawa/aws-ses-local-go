@@ -21,7 +21,7 @@ function App() {
 
   return (
     <div className="p-4">
-      <EmailTable emails={emails} />
+      <EmailTable emails={emails} setPage={setPage} />
     </div>
   );
 }

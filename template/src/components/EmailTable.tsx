@@ -6,9 +6,10 @@ import { TableHeader } from "./TableHeader";
 
 type Props = {
   emails: emails;
+  setPage: (page: number) => void;
 };
 
-const EmailTable: React.FC<Props> = ({ emails }) => {
+const EmailTable: React.FC<Props> = ({ emails, setPage }) => {
   return (
     <>
       <div className="flex flex-col">
@@ -29,7 +30,11 @@ const EmailTable: React.FC<Props> = ({ emails }) => {
               </div>
 
               <div className="py-1 px-4">
-                <PaginationNav />
+                <PaginationNav
+                  page={emails.page}
+                  totalPage={emails.total_page + 1}
+                  setPage={setPage}
+                />
               </div>
             </div>
           </div>

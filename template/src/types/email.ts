@@ -2,6 +2,8 @@ export type emails = {
   page: number;
   limit: number;
   size: number;
+  total_size: number;
+  total_page: number;
   items: email[];
 };
 
