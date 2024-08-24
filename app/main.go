@@ -46,7 +46,7 @@ func main() {
 
 	e.Use(middleware.CORS())
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "[${time_rfc3339}] ${status} ${method} ${path}  ${latency_human}\n",
+		Format: "[${time_rfc3339}] ${status} ${method} ${uri}  ${latency_human}\n",
 		Output: e.Logger.Output(),
 	}))
 
