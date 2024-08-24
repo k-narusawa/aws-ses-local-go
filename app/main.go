@@ -60,9 +60,10 @@ func main() {
 	v1Svc := v1.NewService(mailRepo)
 	v2Svc := v2.NewService(mailRepo)
 	mailQSvc := query.NewMailDtoQueryService(*mailDao)
+	cntQSvc := query.NewCountQueryService(*mailDao)
 
 	rest.NewAwsHandler(e, v1Svc, v2Svc)
-	rest.NewMailHandler(e, mailQSvc)
+	rest.NewMailHandler(e, mailQSvc, cntQSvc)
 
 	e.GET("/health", healthCheck)
 

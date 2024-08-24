@@ -9,14 +9,17 @@ import (
 
 type MailHandler struct {
 	MailDtoQueryService query.IMailDtoQueryService
+	CountQueryService   query.ICountQueryService
 }
 
 func NewMailHandler(
 	e *echo.Echo,
 	iMailDtoQueryService query.IMailDtoQueryService,
+	iCountQueryService query.ICountQueryService,
 ) {
 	handler := &MailHandler{
 		MailDtoQueryService: iMailDtoQueryService,
+		CountQueryService:   iCountQueryService,
 	}
 
 	e.GET("/store", handler.GetMails)
@@ -24,10 +27,12 @@ func NewMailHandler(
 }
 
 type MailResponse struct {
-	Page  int             `json:"page"`
-	Limit int             `json:"limit"`
-	Size  int             `json:"size"`
-	Items []query.MailDto `json:"items"`
+	Page      int             `json:"page"`
+	Limit     int             `json:"limit"`
+	Size      int             `json:"size"`
+	TotalPage int             `json:"total_page"`
+	TotalSize int             `json:"total_size"`
+	Items     []query.MailDto `json:"items"`
 }
 
 func (h *MailHandler) GetMails(c echo.Context) error {
@@ -53,11 +58,18 @@ func (h *MailHandler) GetMails(c echo.Context) error {
 		return c.JSON(500, err)
 	}
 
+	totalSize, err := h.CountQueryService.CountByTo(&to)
+	if err != nil {
+		return c.JSON(500, err)
+	}
+
 	resp := MailResponse{
-		Page:  orgSize,
-		Limit: limit,
-		Size:  len(mails),
-		Items: mails,
+		Page:      orgSize,
+		Limit:     limit,
+		Size:      len(mails),
+		TotalPage: totalSize / limit,
+		TotalSize: totalSize,
+		Items:     mails,
 	}
 
 	return c.JSON(200, resp)

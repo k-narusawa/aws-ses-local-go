@@ -51,10 +51,29 @@ func (d *MailDao) FindByTo(to *string, limit, offset int) ([]domain.Mail, error)
 		return mails, nil
 	}
 
-	err := d.db.Where("`to` = ?", &to).Limit(limit).Offset(offset).Find(&mails).Error
+	err := d.db.Debug().Where("`to` = ?", &to).Limit(limit).Offset(offset).Find(&mails).Error
 	if err != nil {
 		return nil, err
 	}
 
 	return mails, nil
+}
+
+func (d *MailDao) CountByTo(to *string) (int, error) {
+	var count int64
+	if to == nil || *to == "" {
+		err := d.db.Model(&domain.Mail{}).Count(&count).Error
+		if err != nil {
+			return 0, err
+		}
+
+		return int(count), nil
+	}
+
+	err := d.db.Debug().Model(&domain.Mail{}).Where("`to` = ?", to).Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return int(count), nil
 }
