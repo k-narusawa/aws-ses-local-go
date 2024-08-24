@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { emails } from "./types/email";
-import "./App.css";
 import useEmail from "./hooks/email";
+import EmailTable from "./components/EmailTable";
 
 function App() {
   const { getEmails } = useEmail();
@@ -14,20 +14,14 @@ function App() {
     })();
   }, [getEmails]);
 
+  if (!emails) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <>
-      <h1>Emails</h1>
-      {emails && (
-        <ul>
-          {emails.items.map((email) => (
-            <li key={email.message_id}>
-              <h2>{email.subject}</h2>
-              <p>{email.text}</p>
-            </li>
-          ))}
-        </ul>
-      )}
-    </>
+    <div className="p-4">
+      <EmailTable emails={emails} />
+    </div>
   );
 }
 
