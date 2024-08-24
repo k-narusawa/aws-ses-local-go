@@ -36,14 +36,15 @@ func (h *MailHandler) GetMails(c echo.Context) error {
 	to := c.QueryParam("to_address")
 
 	if qPage == "" {
-		qPage = "0"
+		qPage = "1"
 	}
 
 	if qLimit == "" {
 		qLimit = "10"
 	}
 
-	isize, _ := strconv.Atoi(qPage)
+	orgSize, _ := strconv.Atoi(qPage)
+	isize := orgSize - 1
 	limit, _ := strconv.Atoi(qLimit)
 	offset := isize * limit
 
@@ -53,7 +54,7 @@ func (h *MailHandler) GetMails(c echo.Context) error {
 	}
 
 	resp := MailResponse{
-		Page:  isize,
+		Page:  orgSize,
 		Limit: limit,
 		Size:  len(mails),
 		Items: mails,
