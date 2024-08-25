@@ -9,6 +9,7 @@ import (
 
 type IMailService interface {
 	DeleteMail(mId string) error
+	DeleteMails() error
 }
 
 type MailHandler struct {
@@ -32,6 +33,7 @@ func NewMailHandler(
 	e.GET("/store", handler.GetMails)
 	e.GET("/emails", handler.GetMails)
 	e.DELETE("/emails/:message_id", handler.DeleteMail)
+	e.DELETE("/emails", handler.DeleteMails)
 }
 
 type MailResponse struct {
@@ -87,6 +89,15 @@ func (h *MailHandler) DeleteMail(c echo.Context) error {
 	mId := c.Param("message_id")
 
 	err := h.MailService.DeleteMail(mId)
+	if err != nil {
+		return c.JSON(500, err)
+	}
+
+	return c.NoContent(204)
+}
+
+func (h *MailHandler) DeleteMails(c echo.Context) error {
+	err := h.MailService.DeleteMails()
 	if err != nil {
 		return c.JSON(500, err)
 	}

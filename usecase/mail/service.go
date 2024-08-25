@@ -21,3 +21,11 @@ func (s *Service) DeleteMail(mId string) error {
 	}
 	return nil
 }
+
+func (s *Service) DeleteMails() error {
+	err := s.MailRepo.DeleteAll()
+	if err != nil {
+		return err
+	}
+	return nil
+}

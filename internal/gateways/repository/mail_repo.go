@@ -32,3 +32,11 @@ func (r *MailRepository) Delete(messageId string) error {
 	}
 	return nil
 }
+
+func (r *MailRepository) DeleteAll() error {
+	err := r.MailDao.DeleteAll()
+	if err != nil {
+		return err
+	}
+	return nil
+}
