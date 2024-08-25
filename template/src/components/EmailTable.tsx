@@ -8,9 +8,15 @@ type Props = {
   emails: emails;
   setPage: (page: number) => void;
   setSearchAddress: (address: string) => void;
+  deleteEmail: (id: string) => void;
 };
 
-const EmailTable: React.FC<Props> = ({ emails, setPage, setSearchAddress }) => {
+const EmailTable: React.FC<Props> = ({
+  emails,
+  setPage,
+  setSearchAddress,
+  deleteEmail,
+}) => {
   return (
     <>
       <div className="flex flex-col">
@@ -26,7 +32,7 @@ const EmailTable: React.FC<Props> = ({ emails, setPage, setSearchAddress }) => {
               <div className="overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
                   <TableHeader />
-                  <TableBody emails={emails} />
+                  <TableBody emails={emails} deleteEmail={deleteEmail} />
                 </table>
               </div>
 

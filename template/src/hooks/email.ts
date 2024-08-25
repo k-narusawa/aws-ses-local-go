@@ -20,7 +20,15 @@ const useEmail = () => {
     []
   );
 
-  return { getEmails };
+  const deleteEmail = useCallback(async (id: string) => {
+    const response = await axios
+      .delete(`/emails/${id}`)
+      .then((res) => res.data);
+
+    return response;
+  }, []);
+
+  return { getEmails, deleteEmail };
 };
 
 export default useEmail;

@@ -4,7 +4,7 @@ import useEmail from "./hooks/email";
 import EmailTable from "./components/EmailTable";
 
 function App() {
-  const { getEmails } = useEmail();
+  const { getEmails, deleteEmail } = useEmail();
   const [emails, setEmails] = useState<emails | null>(null);
   const [page, setPage] = useState<number>(1);
   const [searchAddress, setSearchAddress] = useState<string>("");
@@ -14,7 +14,7 @@ function App() {
       const resp = await getEmails(page, 10, searchAddress);
       setEmails(resp);
     })();
-  }, [getEmails, page, searchAddress]);
+  }, [getEmails, page, searchAddress, deleteEmail]);
 
   if (!emails) {
     return <div>Loading...</div>;
@@ -26,6 +26,7 @@ function App() {
         emails={emails}
         setPage={setPage}
         setSearchAddress={setSearchAddress}
+        deleteEmail={deleteEmail}
       />
     </div>
   );

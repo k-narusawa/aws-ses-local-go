@@ -4,10 +4,18 @@ import React from "react";
 
 type Props = {
   emails: emails;
+  deleteEmail: (message_id: string) => void;
 };
 
-export const TableBody: React.FC<Props> = ({ emails }) => {
+export const TableBody: React.FC<Props> = ({ emails, deleteEmail }) => {
   const [openRows, setOpenRows] = useState<{ [key: string]: boolean }>({});
+
+  const onDelete = (message_id: string) => {
+    deleteEmail(message_id);
+    emails.items = emails.items.filter(
+      (email) => email.message_id !== message_id
+    );
+  };
 
   const toggleRow = (message_id: string) => {
     setOpenRows((prev) => ({
@@ -30,7 +38,6 @@ export const TableBody: React.FC<Props> = ({ emails }) => {
                   <td className="py-3 ps-4">
                     <div className="flex items-center h-5">
                       <input
-                        id="hs-table-pagination-checkbox-2"
                         type="checkbox"
                         className="border-gray-200 rounded text-blue-600 focus:ring-blue-500"
                       />
@@ -50,6 +57,9 @@ export const TableBody: React.FC<Props> = ({ emails }) => {
                     <button
                       type="button"
                       className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-none focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
+                      onClick={() => {
+                        onDelete(email.message_id);
+                      }}
                     >
                       Delete
                     </button>
