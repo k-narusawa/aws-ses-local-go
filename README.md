@@ -2,7 +2,7 @@
 
 ![coverage](https://raw.githubusercontent.com/k-narusawa/aws-ses-local-go/badges/.badges/main/coverage.svg)
 
-## cli
+## CLI
 
 ### v1
 
@@ -30,6 +30,10 @@ aws sesv2 send-email \
 --content "Simple={Subject={Data=MailTitle,Charset=utf-8},Body={Text={Data=Test,Charset=utf-8}}}" \
 --endpoint-url "http://localhost:8080"
 ```
+
+## GUI
+
+![image](docs/img/image.png)
 
 ## other
 

@@ -8,21 +8,27 @@ import (
 	"log"
 	"net/mail"
 	"strings"
+	"time"
 
 	"math/rand"
 )
 
 type Mail struct {
-	MessageID           string
-	From                string
-	To                  *string
-	Cc                  *string
-	Bcc                 *string
-	Subject             string
-	Text                *string
-	Html                *string
-	ListUnsubscribePost *string
-	ListUnsubscribeUrl  *string
+	MessageID           string    `gorm:"primaryKey"`
+	From                string    `gorm:"not null"`
+	To                  *string   `gorm:"default:null"`
+	Cc                  *string   `gorm:"default:null"`
+	Bcc                 *string   `gorm:"default:null"`
+	Subject             string    `gorm:"not null"`
+	Text                *string   `gorm:"default:null"`
+	Html                *string   `gorm:"default:null"`
+	ListUnsubscribePost *string   `gorm:"default:null"`
+	ListUnsubscribeUrl  *string   `gorm:"default:null"`
+	CreatedAt           time.Time `gorm:"not null"`
+}
+
+func (Mail) TableName() string {
+	return "mails"
 }
 
 func NewMail(
@@ -47,6 +53,7 @@ func NewMail(
 		Html:                html,
 		ListUnsubscribePost: listUnsubscribePost,
 		ListUnsubscribeUrl:  listUnsubscribeUrl,
+		CreatedAt:           time.Now(),
 	}
 }
 
@@ -78,6 +85,7 @@ func FromRawEmailRequest(rawMessage string) (Mail, error) {
 		Text:                &body,
 		ListUnsubscribeUrl:  &listUnsubscribeUrl,
 		ListUnsubscribePost: &listUnsubscribePost,
+		CreatedAt:           time.Now(),
 	}, nil
 }
 
