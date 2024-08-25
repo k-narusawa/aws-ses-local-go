@@ -8,6 +8,7 @@ import (
 	"aws-ses-local-go/internal/gateways/repository"
 	v1 "aws-ses-local-go/usecase/aws/v1"
 	v2 "aws-ses-local-go/usecase/aws/v2"
+	"aws-ses-local-go/usecase/mail"
 	"html/template"
 	"io"
 	"log"
@@ -59,11 +60,12 @@ func main() {
 
 	v1Svc := v1.NewService(mailRepo)
 	v2Svc := v2.NewService(mailRepo)
+	mailSvc := mail.NewService(mailRepo)
 	mailQSvc := query.NewMailDtoQueryService(*mailDao)
 	cntQSvc := query.NewCountQueryService(*mailDao)
 
 	rest.NewAwsHandler(e, v1Svc, v2Svc)
-	rest.NewMailHandler(e, mailQSvc, cntQSvc)
+	rest.NewMailHandler(e, mailQSvc, cntQSvc, mailSvc)
 
 	e.GET("/health", healthCheck)
 

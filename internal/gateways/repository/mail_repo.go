@@ -24,3 +24,11 @@ func (r *MailRepository) Store(mail domain.Mail) error {
 	}
 	return nil
 }
+
+func (r *MailRepository) Delete(messageId string) error {
+	err := r.MailDao.Delete(messageId)
+	if err != nil {
+		return err
+	}
+	return nil
+}

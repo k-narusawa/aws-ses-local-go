@@ -77,3 +77,7 @@ func (d *MailDao) CountByTo(to *string) (int, error) {
 
 	return int(count), nil
 }
+
+func (d *MailDao) Delete(messageID string) error {
+	return d.db.Where("message_id = ?", messageID).Delete(&domain.Mail{}).Error
+}

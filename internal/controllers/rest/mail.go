@@ -7,23 +7,31 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+type IMailService interface {
+	DeleteMail(mId string) error
+}
+
 type MailHandler struct {
 	MailDtoQueryService query.IMailDtoQueryService
 	CountQueryService   query.ICountQueryService
+	MailService         IMailService
 }
 
 func NewMailHandler(
 	e *echo.Echo,
 	iMailDtoQueryService query.IMailDtoQueryService,
 	iCountQueryService query.ICountQueryService,
+	MailService IMailService,
 ) {
 	handler := &MailHandler{
 		MailDtoQueryService: iMailDtoQueryService,
 		CountQueryService:   iCountQueryService,
+		MailService:         MailService,
 	}
 
 	e.GET("/store", handler.GetMails)
 	e.GET("/emails", handler.GetMails)
+	e.DELETE("/emails/:message_id", handler.DeleteMail)
 }
 
 type MailResponse struct {
@@ -73,4 +81,15 @@ func (h *MailHandler) GetMails(c echo.Context) error {
 	}
 
 	return c.JSON(200, resp)
+}
+
+func (h *MailHandler) DeleteMail(c echo.Context) error {
+	mId := c.Param("message_id")
+
+	err := h.MailService.DeleteMail(mId)
+	if err != nil {
+		return c.JSON(500, err)
+	}
+
+	return c.NoContent(204)
 }

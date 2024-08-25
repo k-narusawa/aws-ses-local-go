@@ -13,3 +13,11 @@ func NewService(
 		MailRepo: mailRepo,
 	}
 }
+
+func (s *Service) DeleteMail(mId string) error {
+	err := s.MailRepo.Delete(mId)
+	if err != nil {
+		return err
+	}
+	return nil
+}
