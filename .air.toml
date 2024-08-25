@@ -7,7 +7,7 @@ bin = "tmp_app/app"
 full_bin = "./tmp_app/app/engine"
 log = "air_errors.log"
 include_ext = ["go", "yaml", "toml"]
-exclude_regex = ["_test\\.go"]
+exclude_regex = ["_test\\.go", "node_modules"]
 delay = 1000 
 poll = true
 
