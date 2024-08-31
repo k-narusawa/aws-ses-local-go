@@ -29,9 +29,9 @@ func main() {
 	e := echo.New()
 
 	t := &Template{
-		templates: template.Must(template.ParseGlob("template/dist/*.html")),
+		templates: template.Must(template.ParseGlob("views/*.html")),
 	}
-	e.Static("/", "template/dist")
+	e.Static("/", "views")
 
 	e.Use(middleware.CORS())
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
