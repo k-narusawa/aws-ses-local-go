@@ -19,9 +19,11 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          file: ./Dockerfile
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/aws-ses-local-go:${{ github.ref_name }}
+      - name: Build and push Docker image
+        run: |
+          TAG=${{ github.ref_name }}
+          if [ -z "$TAG" ]; then
+            TAG="latest"
+          fi
+          docker build -t 19992240/aws-ses-local-go:$TAG . 
+          docker push 19992240/aws-ses-local-go:$TAG
