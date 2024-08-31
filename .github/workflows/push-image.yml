@@ -25,11 +25,11 @@ jobs:
           if [ -z "$TAG" ]; then
             TAG="latest"
           fi
-          echo "::set-output name=TAG::$TAG"
+          echo "TAG=$TAG" >> $GITHUB_ENV
 
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           push: true
           file: ./Dockerfile
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/aws-ses-local-go::${{ steps.get_tag_name.outputs.TAG }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/aws-ses-local-go:${{ env.TAG }}
