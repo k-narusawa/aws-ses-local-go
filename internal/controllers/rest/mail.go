@@ -73,6 +73,10 @@ func (h *MailHandler) GetMails(c echo.Context) error {
 		return c.JSON(500, err)
 	}
 
+	if mails == nil {
+		mails = []query.MailDto{}
+	}
+
 	resp := MailResponse{
 		Page:      orgSize,
 		Limit:     limit,
