@@ -31,7 +31,7 @@ func (d *MailDao) FindByMessageID(messageID string) (domain.Mail, error) {
 
 func (d *MailDao) FindAll(limit, offset int) ([]domain.Mail, error) {
 	var mails []domain.Mail
-	err := d.db.Limit(limit).Offset(offset).Find(&mails).Error
+	err := d.db.Limit(limit).Offset(offset).Order("created_at desc").Find(&mails).Error
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func (d *MailDao) FindByTo(to *string, limit, offset int) ([]domain.Mail, error)
 	var mails []domain.Mail
 
 	if to == nil || *to == "" {
-		err := d.db.Limit(limit).Offset(offset).Find(&mails).Error
+		err := d.db.Limit(limit).Offset(offset).Order("created_at desc").Find(&mails).Error
 		if err != nil {
 			return nil, err
 		}
