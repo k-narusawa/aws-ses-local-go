@@ -20,3 +20,14 @@ export type email = {
   list_unsubscribe_url: string;
   created_at: string;
 };
+
+export const emptyEmails = (): emails => {
+  return {
+    page: 0,
+    limit: 0,
+    size: 0,
+    total_size: 0,
+    total_page: 0,
+    items: [],
+  };
+};

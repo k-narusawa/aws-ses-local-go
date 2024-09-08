@@ -28,7 +28,13 @@ const useEmail = () => {
     return response;
   }, []);
 
-  return { getEmails, deleteEmail };
+  const deleteEmails = useCallback(async () => {
+    const response = await axios.delete(`/emails`).then((res) => res.data);
+
+    return response;
+  }, []);
+
+  return { getEmails, deleteEmail, deleteEmails };
 };
 
 export default useEmail;
