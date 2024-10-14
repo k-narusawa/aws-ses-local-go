@@ -10,10 +10,14 @@ function App() {
   const [searchAddress, setSearchAddress] = useState<string>("");
 
   useEffect(() => {
-    (async () => {
-      const resp = await getEmails(page, 10, searchAddress);
+    const fetchEmails = async () => {
+      const resp = await getEmails(page, 20, searchAddress);
       setEmails(resp);
-    })();
+    };
+    fetchEmails();
+    const intervalId = setInterval(fetchEmails, 10000);
+
+    return () => clearInterval(intervalId);
   }, [getEmails, page, searchAddress, deleteEmail, deleteEmails]);
 
   if (!emails) {
