@@ -6,11 +6,15 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"mime"
 	"net/mail"
+	"os"
 	"strings"
 	"time"
 
 	"math/rand"
+
+	charsetlib "golang.org/x/net/html/charset"
 )
 
 type Mail struct {
@@ -69,7 +73,34 @@ func FromRawEmailRequest(rawMessage string) (Mail, error) {
 		log.Printf("failed to parse raw email: %v", err)
 		return Mail{}, err
 	}
+
+	contentType := message.Header.Get("Content-Type")
+	mediaType, params, err := mime.ParseMediaType(contentType)
+	if err != nil {
+		log.Printf("Error parsing Content-Type: %v\n", err)
+		return Mail{}, err
+	}
+
+	var charset string
+	if cs, ok := params["charset"]; ok {
+		charset = cs
+	} else {
+		charset = "utf-8" // デフォルト
+	}
+
+	if strings.HasPrefix(mediaType, "text/") {
+		body, err := decodeBody(charset, msg.Body)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error decoding body: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Printf("Body: %s\n", body)
+	} else {
+		fmt.Fprintf(os.Stderr, "Non-text content type: %s\n", contentType)
+	}
+
 	to := message.Header.Get("To")
+	subject := message.Header.Get("Subject")
 	listUnsubscribeUrl := strings.Join(message.Header["List-Unsubscribe"], ",")
 	listUnsubscribePost := strings.Join(message.Header["List-Unsubscribe-Post"], ",")
 	body, err := getBody(message)
@@ -81,7 +112,7 @@ func FromRawEmailRequest(rawMessage string) (Mail, error) {
 		MessageID:           generateMessageID(),
 		From:                message.Header.Get("From"),
 		To:                  &to,
-		Subject:             message.Header.Get("Subject"),
+		Subject:             subject,
 		Text:                &body,
 		ListUnsubscribeUrl:  &listUnsubscribeUrl,
 		ListUnsubscribePost: &listUnsubscribePost,
@@ -113,4 +144,24 @@ func getBody(message *mail.Message) (string, error) {
 		return "", err
 	}
 	return string(bodyBytes), nil
+}
+
+func decodeHeader(encoded string) (string, error) {
+	decodedHeader, err := (&mime.WordDecoder{}).DecodeHeader(encoded)
+	if err != nil {
+		return "", err
+	}
+	return decodedHeader, nil
+}
+
+func decodeBody(charset string, body io.Reader) (string, error) {
+	reader, err := charsetlib.NewReader(body, charset)
+	if err != nil {
+		return "", err
+	}
+	decodedBytes, err := io.ReadAll(reader)
+	if err != nil {
+		return ""çç, err
+	}
+	return string(decodedBytes), nil
 }

@@ -18,7 +18,7 @@ func SendSimpleEmail(client *sesv2.Client) {
 			Simple: &types.Message{
 				Body: &types.Body{
 					Text: &types.Content{
-						Data: aws.String("Hello, World!"),
+						Data: aws.String("こんにちは"),
 					},
 				},
 				Subject: &types.Content{
@@ -60,11 +60,11 @@ func SendRawEmail(client *sesv2.Client) {
 
 func formatRawEmailMessage() ([]byte, error) {
 	message := gomail.NewMessage()
-	body := []byte("Hello, World!!!")
+	body := []byte("こんにちは")
 
 	message.SetHeader("From", "from@example.com")
 	message.SetHeader("To", "to@example.com")
-	message.SetHeader("Subject", "Hello")
+	message.SetHeader("Subject", "こんにちは")
 	message.SetBody("text/plain", string(body[:]))
 
 	buf := new(bytes.Buffer)
