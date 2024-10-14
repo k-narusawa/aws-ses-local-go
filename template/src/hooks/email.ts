@@ -2,11 +2,13 @@ import { useCallback } from "react";
 import { emails } from "../types/email";
 import axios, { AxiosResponse } from "axios";
 
+const host = `http://localhost:8080`;
+
 const useEmail = () => {
   const getEmails = useCallback(
     async (page: number, limit: number, toAddress: string) => {
       const response = await axios
-        .get(`/emails`, {
+        .get(`${host}/emails`, {
           params: {
             page: page,
             limit: limit,
@@ -22,7 +24,7 @@ const useEmail = () => {
 
   const deleteEmail = useCallback(async (id: string) => {
     const response = await axios
-      .delete(`/emails/${id}`)
+      .delete(`${host}/emails/${id}`)
       .then((res) => res.data);
 
     return response;
