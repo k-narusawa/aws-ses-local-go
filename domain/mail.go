@@ -6,11 +6,15 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"mime"
+	"mime/quotedprintable"
 	"net/mail"
 	"strings"
 	"time"
 
 	"math/rand"
+
+	charsetlib "golang.org/x/net/html/charset"
 )
 
 type Mail struct {
@@ -69,19 +73,47 @@ func FromRawEmailRequest(rawMessage string) (Mail, error) {
 		log.Printf("failed to parse raw email: %v", err)
 		return Mail{}, err
 	}
+
+	contentType := message.Header.Get("Content-Type")
+	_, params, err := mime.ParseMediaType(contentType)
+	if err != nil {
+		log.Printf("Error parsing Content-Type: %v\n", err)
+		return Mail{}, err
+	}
+
+	var charset string
+	if cs, ok := params["charset"]; ok {
+		charset = cs
+	} else {
+		charset = "utf-8" // デフォルト
+	}
+
+	subject := message.Header.Get("Subject")
+	decodedSubject, err := decodeHeader(subject)
+	if err != nil {
+		log.Printf("Failed to decode subject: %v", err)
+	}
+
+	contentTransferEncoding := message.Header.Get("Content-Transfer-Encoding")
+	if contentTransferEncoding == "" {
+		contentTransferEncoding = "7bit"
+	}
+
+	body, err := decodeBody(charset, message.Body, contentTransferEncoding)
+	if err != nil {
+		log.Printf("failed to decode body: %v", err)
+		return Mail{}, err
+	}
+
 	to := message.Header.Get("To")
 	listUnsubscribeUrl := strings.Join(message.Header["List-Unsubscribe"], ",")
 	listUnsubscribePost := strings.Join(message.Header["List-Unsubscribe-Post"], ",")
-	body, err := getBody(message)
-	if err != nil {
-		return Mail{}, err
-	}
 
 	return Mail{
 		MessageID:           generateMessageID(),
 		From:                message.Header.Get("From"),
 		To:                  &to,
-		Subject:             message.Header.Get("Subject"),
+		Subject:             decodedSubject,
 		Text:                &body,
 		ListUnsubscribeUrl:  &listUnsubscribeUrl,
 		ListUnsubscribePost: &listUnsubscribePost,
@@ -106,11 +138,38 @@ func parseRawEmail(rawEmail string) (*mail.Message, error) {
 	return message, nil
 }
 
-func getBody(message *mail.Message) (string, error) {
-	bodyBytes, err := io.ReadAll(message.Body)
+func decodeHeader(encoded string) (string, error) {
+	decodedHeader, err := (&mime.WordDecoder{}).DecodeHeader(encoded)
 	if err != nil {
-		log.Printf("failed to read body: %v", err)
 		return "", err
 	}
-	return string(bodyBytes), nil
+	return decodedHeader, nil
+}
+
+func decodeBody(charset string, body io.Reader, contentTransferEncoding string) (string, error) {
+	var reader io.Reader
+	var err error
+
+	// Content-Transfer-Encodingに基づいてデコード処理を追加
+	switch strings.ToLower(contentTransferEncoding) {
+	case "base64":
+		reader = base64.NewDecoder(base64.StdEncoding, body)
+	case "quoted-printable":
+		reader = quotedprintable.NewReader(body)
+	default:
+		reader = body // デフォルトは何もしない
+	}
+
+	// charsetに基づく変換
+	reader, err = charsetlib.NewReader(reader, charset)
+	if err != nil {
+		return "", err
+	}
+
+	decodedBytes, err := io.ReadAll(reader)
+	if err != nil {
+		return "", err
+	}
+
+	return string(decodedBytes), nil
 }

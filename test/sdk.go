@@ -38,6 +38,27 @@ func TestV2() {
 		BaseEndpoint: aws.String("http://localhost:8080"),
 	})
 
-	v2.SendSimpleEmail(svc)
-	v2.SendRawEmail(svc)
+	sin := v2.SendSimpleEmailInput{
+		Subject: "Hello from SESv2 SendSimpleEmail",
+		Body:    "Hello from SESv2 SendSimpleEmail",
+		From:    "from@example.com",
+		To:      "to@example.com",
+	}
+	v2.SendSimpleEmail(svc, sin)
+
+	rin := v2.SendRawEmailInput{
+		Subject: "Hello from SESv2 SendRawEmail",
+		Body:    "Hello from SESv2 SendRawEmail",
+		From:    "from@example.com",
+		To:      "to@example.com",
+	}
+	v2.SendRawEmail(svc, rin)
+
+	rin_2 := v2.SendRawEmailInput{
+		Subject: "日本語のメール",
+		Body:    "日本語のメール",
+		From:    "from@example.com",
+		To:      "to@example.com",
+	}
+	v2.SendRawEmail(svc, rin_2)
 }
