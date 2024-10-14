@@ -12,24 +12,31 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-func SendSimpleEmail(client *sesv2.Client) {
+type SendSimpleEmailInput struct {
+	Subject string
+	Body    string
+	From    string
+	To      string
+}
+
+func SendSimpleEmail(client *sesv2.Client, in SendSimpleEmailInput) {
 	input := &sesv2.SendEmailInput{
 		Content: &types.EmailContent{
 			Simple: &types.Message{
 				Body: &types.Body{
 					Text: &types.Content{
-						Data: aws.String("こんにちは"),
+						Data: aws.String(in.Subject),
 					},
 				},
 				Subject: &types.Content{
-					Data: aws.String("Hello"),
+					Data: aws.String(in.Subject),
 				},
 			},
 		},
 		Destination: &types.Destination{
-			ToAddresses: []string{"to@example.com"},
+			ToAddresses: []string{in.To},
 		},
-		FromEmailAddress: aws.String("from@example.com"),
+		FromEmailAddress: aws.String(in.From),
 	}
 
 	result, err := client.SendEmail(context.TODO(), input)
@@ -40,8 +47,15 @@ func SendSimpleEmail(client *sesv2.Client) {
 	fmt.Println("SendSimpleEmail is OK. MessageID: ", *result.MessageId)
 }
 
-func SendRawEmail(client *sesv2.Client) {
-	rawMsg, _ := formatRawEmailMessage()
+type SendRawEmailInput struct {
+	Subject string
+	Body    string
+	From    string
+	To      string
+}
+
+func SendRawEmail(client *sesv2.Client, in SendRawEmailInput) {
+	rawMsg, _ := formatRawEmailMessage(in.Subject, in.Body, in.From, in.To)
 	input := &sesv2.SendEmailInput{
 		Content: &types.EmailContent{
 			Raw: &types.RawMessage{
@@ -58,14 +72,14 @@ func SendRawEmail(client *sesv2.Client) {
 	fmt.Println("SendRawEmail is OK. MessageID: ", *result.MessageId)
 }
 
-func formatRawEmailMessage() ([]byte, error) {
+func formatRawEmailMessage(subject, body, from, to string) ([]byte, error) {
 	message := gomail.NewMessage()
-	body := []byte("こんにちは")
+	messageBody := []byte(body)
 
-	message.SetHeader("From", "from@example.com")
-	message.SetHeader("To", "to@example.com")
-	message.SetHeader("Subject", "こんにちは")
-	message.SetBody("text/plain", string(body[:]))
+	message.SetHeader("From", from)
+	message.SetHeader("To", to)
+	message.SetHeader("Subject", subject)
+	message.SetBody("text/plain", string(messageBody[:]))
 
 	buf := new(bytes.Buffer)
 	_, err := message.WriteTo(buf)

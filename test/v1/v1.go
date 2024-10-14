@@ -11,9 +11,9 @@ import (
 
 func SendEmail(svc *ses.SES) {
 	const (
-		Sender    = "sender@example.com"
-		Recipient = "recipient@example.com"
-		Subject   = "Amazon SES Test (AWS SDK for Go)"
+		Sender    = "from@example.com"
+		Recipient = "to@example.com"
+		Subject   = "Hello from SESv1 SendEmail"
 		HtmlBody  = "<h1>Amazon SES Test Email (AWS SDK for Go)</h1><p>This email was sent with " +
 			"<a href='https://aws.amazon.com/ses/'>Amazon SES</a> using the " +
 			"<a href='https://aws.amazon.com/sdk-for-go/'>AWS SDK for Go</a>.</p>"
@@ -73,9 +73,9 @@ func SendEmail(svc *ses.SES) {
 
 func SendRawEmail(svc *ses.SES) {
 	const (
-		Sender    = "sender@example.com"
-		Recipient = "recipient@example.com"
-		Subject   = "Amazon SES Test (AWS SDK for Go)"
+		Sender    = "from@example.com"
+		Recipient = "to@example.com"
+		Subject   = "Hello from SESv1 SendRawEmail"
 		HtmlBody  = "<h1>Amazon SES Test Email (AWS SDK for Go)</h1><p>This email was sent with " +
 			"<a href='https://aws.amazon.com/ses/'>Amazon SES</a> using the " +
 			"<a href='https://aws.amazon.com/sdk-for-go/'>AWS SDK for Go</a>.</p>"
