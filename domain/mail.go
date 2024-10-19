@@ -106,8 +106,8 @@ func FromRawEmailRequest(rawMessage string) (Mail, error) {
 	}
 
 	to := message.Header.Get("To")
-	listUnsubscribeUrl := strings.Join(message.Header["List-Unsubscribe"], ",")
-	listUnsubscribePost := strings.Join(message.Header["List-Unsubscribe-Post"], ",")
+	listUnsubscribeUrl := message.Header.Get("List-Unsubscribe")
+	listUnsubscribePost := message.Header.Get("List-Unsubscribe-Post")
 
 	return Mail{
 		MessageID:           generateMessageID(),

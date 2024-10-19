@@ -13,10 +13,11 @@ import (
 )
 
 type SendSimpleEmailInput struct {
-	Subject string
-	Body    string
-	From    string
-	To      string
+	Subject            string
+	Body               string
+	From               string
+	To                 string
+	ListUnsubscribeUrl *string
 }
 
 func SendSimpleEmail(client *sesv2.Client, in SendSimpleEmailInput) {
@@ -30,6 +31,16 @@ func SendSimpleEmail(client *sesv2.Client, in SendSimpleEmailInput) {
 				},
 				Subject: &types.Content{
 					Data: aws.String(in.Subject),
+				},
+				Headers: []types.MessageHeader{
+					{
+						Name:  aws.String("List-Unsubscribe"),
+						Value: aws.String(fmt.Sprintf("<%s>", *in.ListUnsubscribeUrl)),
+					},
+					{
+						Name:  aws.String("List-Unsubscribe-Post"),
+						Value: aws.String("List-Unsubscribe=One-Click"),
+					},
 				},
 			},
 		},
@@ -48,14 +59,15 @@ func SendSimpleEmail(client *sesv2.Client, in SendSimpleEmailInput) {
 }
 
 type SendRawEmailInput struct {
-	Subject string
-	Body    string
-	From    string
-	To      string
+	Subject            string
+	Body               string
+	From               string
+	To                 string
+	ListUnsubscribeUrl *string
 }
 
 func SendRawEmail(client *sesv2.Client, in SendRawEmailInput) {
-	rawMsg, _ := formatRawEmailMessage(in.Subject, in.Body, in.From, in.To)
+	rawMsg, _ := formatRawEmailMessage(in.Subject, in.Body, in.From, in.To, in.ListUnsubscribeUrl)
 	input := &sesv2.SendEmailInput{
 		Content: &types.EmailContent{
 			Raw: &types.RawMessage{
@@ -72,13 +84,17 @@ func SendRawEmail(client *sesv2.Client, in SendRawEmailInput) {
 	fmt.Println("SendRawEmail is OK. MessageID: ", *result.MessageId)
 }
 
-func formatRawEmailMessage(subject, body, from, to string) ([]byte, error) {
+func formatRawEmailMessage(subject, body, from, to string, listUnsubscribeUrl *string) ([]byte, error) {
 	message := gomail.NewMessage()
 	messageBody := []byte(body)
 
 	message.SetHeader("From", from)
 	message.SetHeader("To", to)
 	message.SetHeader("Subject", subject)
+	if listUnsubscribeUrl != nil {
+		message.SetHeader("List-Unsubscribe", *listUnsubscribeUrl)
+		message.SetHeader("List-Unsubscribe-Post", "List-Unsubscribe=One-Click")
+	}
 	message.SetBody("text/plain", string(messageBody[:]))
 
 	buf := new(bytes.Buffer)
