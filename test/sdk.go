@@ -39,18 +39,20 @@ func TestV2() {
 	})
 
 	sin := v2.SendSimpleEmailInput{
-		Subject: "Hello from SESv2 SendSimpleEmail",
-		Body:    "Hello from SESv2 SendSimpleEmail",
-		From:    "from@example.com",
-		To:      "to@example.com",
+		Subject:            "Hello from SESv2 SendSimpleEmail",
+		Body:               "Hello from SESv2 SendSimpleEmail",
+		From:               "from@example.com",
+		To:                 "to@example.com",
+		ListUnsubscribeUrl: aws.String("http://localhost:8080/test/unsubscribe"),
 	}
 	v2.SendSimpleEmail(svc, sin)
 
 	rin := v2.SendRawEmailInput{
-		Subject: "Hello from SESv2 SendRawEmail",
-		Body:    "Hello from SESv2 SendRawEmail",
-		From:    "from@example.com",
-		To:      "to@example.com",
+		Subject:            "Hello from SESv2 SendRawEmail",
+		Body:               "Hello from SESv2 SendRawEmail",
+		From:               "from@example.com",
+		To:                 "to@example.com",
+		ListUnsubscribeUrl: aws.String("http://localhost:8080/test/unsubscribe"),
 	}
 	v2.SendRawEmail(svc, rin)
 
