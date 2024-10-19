@@ -2,13 +2,14 @@ import { useCallback } from "react";
 import { emails } from "../types/email";
 import axios, { AxiosResponse } from "axios";
 
-const host = `http://localhost:8080`;
+const baseURL = import.meta.env.VITE_API_URL ?? undefined;
 
 const useEmail = () => {
   const getEmails = useCallback(
     async (page: number, limit: number, toAddress: string) => {
       const response = await axios
-        .get(`${host}/emails`, {
+        .get(`/emails`, {
+          baseURL: baseURL,
           params: {
             page: page,
             limit: limit,
@@ -24,14 +25,20 @@ const useEmail = () => {
 
   const deleteEmail = useCallback(async (id: string) => {
     const response = await axios
-      .delete(`${host}/emails/${id}`)
+      .delete(`/emails/${id}}`, {
+        baseURL: baseURL,
+      })
       .then((res) => res.data);
 
     return response;
   }, []);
 
   const deleteEmails = useCallback(async () => {
-    const response = await axios.delete(`/emails`).then((res) => res.data);
+    const response = await axios
+      .delete(`/emails`, {
+        baseURL: baseURL,
+      })
+      .then((res) => res.data);
 
     return response;
   }, []);
