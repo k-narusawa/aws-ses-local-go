@@ -25,5 +25,6 @@
   "markdownlint.config": {
     "default": true,
     "MD034": false
-  }
+  },
+  "makefile.configureOnOpen": false
 }
