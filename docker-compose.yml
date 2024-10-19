@@ -13,7 +13,7 @@ services:
   #     - AIR_GO_MOD=true
   #     - AIR_TMP_DIR=/tmp/air
   app:
-    image: 19992240/aws-ses-local-go:v0.4.0
+    image: 19992240/aws-ses-local-go:v0.4.1
     platform: linux/amd64
     ports:
       - "8080:8080"
