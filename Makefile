@@ -1,6 +1,6 @@
 .PHONY: test
 dev:
-	docker-compose up
+	go run app/main.go
 
 up: 
 	docker-compose up -d
