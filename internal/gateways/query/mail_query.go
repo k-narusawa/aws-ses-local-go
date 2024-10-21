@@ -24,14 +24,18 @@ func (s *MailDtoQueryService) FindByMessageID(messageID string) (query.MailDto, 
 	}
 
 	return query.MailDto{
-		MessageID:           mail.MessageID,
-		From:                mail.From,
-		To:                  mail.To,
-		Cc:                  mail.Cc,
-		Bcc:                 mail.Bcc,
-		Subject:             mail.Subject,
-		Text:                mail.Text,
-		Html:                mail.Html,
+		MessageID: mail.MessageID,
+		From:      mail.From,
+		Destination: query.Destination{
+			To:  mail.To,
+			Cc:  mail.Cc,
+			Bcc: mail.Bcc,
+		},
+		Subject: mail.Subject,
+		Body: query.Body{
+			Text: mail.Text,
+			Html: mail.Html,
+		},
 		ListUnsubscribePost: mail.ListUnsubscribePost,
 		ListUnsubscribeUrl:  mail.ListUnsubscribeUrl,
 		CreatedAt:           mail.CreatedAt,
@@ -47,14 +51,18 @@ func (s *MailDtoQueryService) FindAll(limit, offset int) ([]query.MailDto, error
 	var mailDtos []query.MailDto
 	for _, mail := range mails {
 		mailDtos = append(mailDtos, query.MailDto{
-			MessageID:           mail.MessageID,
-			From:                mail.From,
-			To:                  mail.To,
-			Cc:                  mail.Cc,
-			Bcc:                 mail.Bcc,
-			Subject:             mail.Subject,
-			Text:                mail.Text,
-			Html:                mail.Html,
+			MessageID: mail.MessageID,
+			From:      mail.From,
+			Destination: query.Destination{
+				To:  mail.To,
+				Cc:  mail.Cc,
+				Bcc: mail.Bcc,
+			},
+			Subject: mail.Subject,
+			Body: query.Body{
+				Text: mail.Text,
+				Html: mail.Html,
+			},
 			ListUnsubscribePost: mail.ListUnsubscribePost,
 			ListUnsubscribeUrl:  mail.ListUnsubscribeUrl,
 			CreatedAt:           mail.CreatedAt,
@@ -73,14 +81,18 @@ func (s *MailDtoQueryService) FindByTo(to *string, limit, offset int) ([]query.M
 	var mailDtos []query.MailDto
 	for _, mail := range mails {
 		mailDtos = append(mailDtos, query.MailDto{
-			MessageID:           mail.MessageID,
-			From:                mail.From,
-			To:                  mail.To,
-			Cc:                  mail.Cc,
-			Bcc:                 mail.Bcc,
-			Subject:             mail.Subject,
-			Text:                mail.Text,
-			Html:                mail.Html,
+			MessageID: mail.MessageID,
+			From:      mail.From,
+			Destination: query.Destination{
+				To:  mail.To,
+				Cc:  mail.Cc,
+				Bcc: mail.Bcc,
+			},
+			Subject: mail.Subject,
+			Body: query.Body{
+				Text: mail.Text,
+				Html: mail.Html,
+			},
 			ListUnsubscribePost: mail.ListUnsubscribePost,
 			ListUnsubscribeUrl:  mail.ListUnsubscribeUrl,
 			CreatedAt:           mail.CreatedAt,
