@@ -51,7 +51,7 @@ func (d *MailDao) FindByTo(to *string, limit, offset int) ([]domain.Mail, error)
 		return mails, nil
 	}
 
-	err := d.db.Where("`to` = ?", &to).Limit(limit).Offset(offset).Find(&mails).Error
+	err := d.db.Where("`to` = ?", &to).Limit(limit).Offset(offset).Order("created_at desc").Find(&mails).Error
 	if err != nil {
 		return nil, err
 	}
