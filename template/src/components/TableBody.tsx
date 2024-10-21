@@ -51,7 +51,7 @@ export const TableBody: React.FC<Props> = ({ emails, deleteEmail }) => {
                     {email.from}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                    {email.to}
+                    {email.destination.to}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                     <button
@@ -75,14 +75,16 @@ export const TableBody: React.FC<Props> = ({ emails, deleteEmail }) => {
                             className="w-full mt-2 p-2 border border-gray-300 rounded"
                             rows={4}
                             readOnly
-                            value={email.text}
+                            value={email.body.text}
                           />
                         </div>
                         <div className="mb-2">
                           <strong>HTML:</strong>
                           <div
                             className="w-full mt-2 p-2 border border-gray-300 rounded"
-                            dangerouslySetInnerHTML={{ __html: email.html }}
+                            dangerouslySetInnerHTML={{
+                              __html: email.body.html,
+                            }}
                           />
                         </div>
                       </div>
