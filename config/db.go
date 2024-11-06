@@ -2,6 +2,8 @@ package config
 
 import (
 	"aws-ses-local-go/domain"
+	"log"
+	"os"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -14,6 +16,24 @@ func DBConnect() *gorm.DB {
 	}
 
 	db.AutoMigrate(&domain.Mail{})
+
+	limit := os.Getenv("LIMIT_RECORDS")
+	if limit != "" {
+		log.Println("Limiting records to " + limit)
+		triggerSQL := `
+			CREATE TRIGGER limit_records_after_insert
+			AFTER INSERT ON mails
+			BEGIN
+				DELETE FROM mails
+				WHERE message_id IN (
+					SELECT message_id FROM mails
+					ORDER BY created_at DESC
+					LIMIT 1 OFFSET ` + limit + `
+				);
+			END;
+			`
+		db.Exec(triggerSQL)
+	}
 
 	return db
 }

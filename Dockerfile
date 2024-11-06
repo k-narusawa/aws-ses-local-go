@@ -3,6 +3,9 @@ FROM golang:1.22.3-alpine3.18 AS builder
 RUN apk update && apk upgrade && \
     apk --update add git make bash build-base
 
+ENV GO111MODULE=on
+ENV CGO_ENABLED=1
+
 WORKDIR /app
 
 COPY . .
