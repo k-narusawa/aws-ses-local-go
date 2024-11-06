@@ -21,6 +21,7 @@ func DBConnect() *gorm.DB {
 	if limit != "" {
 		log.Println("Limiting records to " + limit)
 		triggerSQL := `
+			DROP TRIGGER IF EXISTS limit_records_after_insert;
 			CREATE TRIGGER limit_records_after_insert
 			AFTER INSERT ON mails
 			BEGIN
