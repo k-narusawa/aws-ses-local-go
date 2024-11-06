@@ -48,7 +48,7 @@ type SendRawEmailInput struct {
 }
 
 func (s *Service) SendRawEmail(in SendRawEmailInput) (*SendEmailOutput, error) {
-	mail, err := domain.FromRawEmailRequest(in.RawMessage)
+	mail, err := domain.FromRawEmailRequest(nil, in.RawMessage)
 	if err != nil {
 		return nil, err
 	}

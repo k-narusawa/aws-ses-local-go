@@ -61,7 +61,7 @@ func NewMail(
 	}
 }
 
-func FromRawEmailRequest(rawMessage string) (Mail, error) {
+func FromRawEmailRequest(fromEmailAddress *string, rawMessage string) (Mail, error) {
 	decodedData, err := base64.StdEncoding.DecodeString(rawMessage)
 	if err != nil {
 		log.Printf("failed to decode base64: %v", err)
@@ -106,13 +106,20 @@ func FromRawEmailRequest(rawMessage string) (Mail, error) {
 	}
 
 	to := message.Header.Get("To")
+	var from string
+	if fromEmailAddress != nil {
+		from = *fromEmailAddress
+	} else {
+		from = message.Header.Get("From")
+	}
+
 	listUnsubscribeUrl := message.Header.Get("List-Unsubscribe")
 	listUnsubscribeUrl = strings.Trim(listUnsubscribeUrl, "<>")
 	listUnsubscribePost := message.Header.Get("List-Unsubscribe-Post")
 
 	return Mail{
 		MessageID:           generateMessageID(),
-		From:                message.Header.Get("From"),
+		From:                from,
 		To:                  &to,
 		Subject:             decodedSubject,
 		Text:                &body,
