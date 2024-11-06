@@ -52,7 +52,7 @@ func (s *Service) SendSimpleEmail(in V2EmailOutboundEmailInput) (*SendEmailV2Out
 }
 
 func (s *Service) SendRawEmail(in V2EmailOutboundEmailInput) (*SendEmailV2Output, error) {
-	mail, err := domain.FromRawEmailRequest(in.Content.Raw.Data)
+	mail, err := domain.FromRawEmailRequest(in.FromEmailAddress, in.Content.Raw.Data)
 	if err != nil {
 		return nil, err
 	}
