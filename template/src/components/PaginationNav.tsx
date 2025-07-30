@@ -10,46 +10,106 @@ export const PaginationNav: React.FC<Props> = ({
   setPage,
 }) => {
   return (
-    <>
-      <nav className="flex items-center space-x-1" aria-label="Pagination">
-        {page > 1 && (
-          <button
-            type="button"
-            onClick={() => setPage(page - 1)}
-            className="p-2.5 min-w-[40px] inline-flex justify-center items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
-            aria-label="Previous"
+    <nav
+      className="flex items-center justify-center space-x-2"
+      aria-label="ページネーション"
+    >
+      {page > 1 && (
+        <button
+          type="button"
+          onClick={() => setPage(page - 1)}
+          className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+          aria-label="前のページ"
+        >
+          <svg
+            className="w-5 h-5 mr-1"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <span className="sr-only">Previous</span>
-            <span aria-hidden="true">«</span>
-          </button>
-        )}
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+          前へ
+        </button>
+      )}
 
-        {Array.from({ length: totalPage }, (_, i) => (
-          <button
-            key={i}
-            onClick={() => setPage(i + 1)}
-            type="button"
-            className={`min-w-[40px] flex justify-center items-center text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 py-2.5 text-sm rounded-full disabled:opacity-50 disabled:pointer-events-none ${
-              i + 1 === page ? "bg-gray-100" : ""
-            }`}
-            aria-current="page"
-          >
-            {i + 1}
-          </button>
-        ))}
+      <div className="hidden md:flex space-x-1">
+        {Array.from({ length: totalPage }, (_, i) => {
+          const pageNum = i + 1;
+          const isCurrentPage = pageNum === page;
+          const isNearCurrentPage = Math.abs(pageNum - page) <= 2;
+          const isFirstPage = pageNum === 1;
+          const isLastPage = pageNum === totalPage;
 
-        {page < totalPage && (
-          <button
-            type="button"
-            onClick={() => setPage(page + 1)}
-            className="p-2.5 min-w-[40px] inline-flex justify-center items-center gap-x-2 text-sm rounded-full text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
-            aria-label="Next"
+          if (isNearCurrentPage || isFirstPage || isLastPage) {
+            return (
+              <button
+                key={i}
+                onClick={() => setPage(pageNum)}
+                type="button"
+                className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 ${
+                  isCurrentPage
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
+                }`}
+                aria-current={isCurrentPage ? "page" : undefined}
+                aria-label={`${pageNum}ページ目`}
+              >
+                {pageNum}
+              </button>
+            );
+          } else if (
+            (pageNum === page - 3 && pageNum > 2) ||
+            (pageNum === page + 3 && pageNum < totalPage - 1)
+          ) {
+            return (
+              <span
+                key={i}
+                className="inline-flex items-center px-4 py-2 text-sm text-gray-700"
+                aria-hidden="true"
+              >
+                ...
+              </span>
+            );
+          }
+          return null;
+        })}
+      </div>
+
+      <div className="md:hidden">
+        <span className="text-sm text-gray-700">
+          {page} / {totalPage} ページ
+        </span>
+      </div>
+
+      {page < totalPage && (
+        <button
+          type="button"
+          onClick={() => setPage(page + 1)}
+          className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+          aria-label="次のページ"
+        >
+          次へ
+          <svg
+            className="w-5 h-5 ml-1"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <span className="sr-only">Next</span>
-            <span aria-hidden="true">»</span>
-          </button>
-        )}
-      </nav>
-    </>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
+      )}
+    </nav>
   );
 };

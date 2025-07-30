@@ -28,43 +28,48 @@ const EmailTable: React.FC<Props> = ({
   };
 
   return (
-    <>
-      <div className="flex flex-col">
-        <div className="-m-1.5 overflow-x-auto">
-          <div className="p-1.5 min-w-full inline-block align-middle">
-            <div className="border rounded-lg divide-y divide-gray-200">
-              <div className="py-3 px-4">
-                <div className="flex justify-between space-x-2">
-                  <SearchInput setSearchAddress={setSearchAddress} />
-                  <button
-                    type="button"
-                    className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-                    onClick={onDeleteEmails}
-                  >
-                    <span className="font-bold">Delete All</span>
-                  </button>
-                </div>
-              </div>
-
-              <div className="overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <TableHeader />
-                  <TableBody emails={emails} deleteEmail={deleteEmail} />
-                </table>
-              </div>
-
-              <div className="py-1 px-4">
-                <PaginationNav
-                  page={emails.page}
-                  totalPage={emails.total_page + 1}
-                  setPage={setPage}
-                />
-              </div>
-            </div>
-          </div>
+    <div className="flex flex-col">
+      <div className="p-6 border-b border-gray-200">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <SearchInput setSearchAddress={setSearchAddress} />
+          <button
+            type="button"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
+            onClick={onDeleteEmails}
+          >
+            <svg
+              className="h-5 w-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
+            </svg>
+            全てのメールを削除
+          </button>
         </div>
       </div>
-    </>
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <TableHeader />
+          <TableBody emails={emails} deleteEmail={deleteEmail} />
+        </table>
+      </div>
+
+      <div className="p-6 border-t border-gray-200">
+        <PaginationNav
+          page={emails.page}
+          totalPage={emails.total_page + 1}
+          setPage={setPage}
+        />
+      </div>
+    </div>
   );
 };
 
