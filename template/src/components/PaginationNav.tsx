@@ -1,3 +1,5 @@
+import React from "react";
+
 type Props = {
   page: number;
   totalPage: number;
@@ -39,17 +41,58 @@ export const PaginationNav: React.FC<Props> = ({
       )}
 
       <div className="hidden md:flex space-x-1">
-        {Array.from({ length: totalPage }, (_, i) => {
-          const pageNum = i + 1;
-          const isCurrentPage = pageNum === page;
-          const isNearCurrentPage = Math.abs(pageNum - page) <= 2;
-          const isFirstPage = pageNum === 1;
-          const isLastPage = pageNum === totalPage;
+        {(() => {
+          const visiblePages = new Set<number>();
 
-          if (isNearCurrentPage || isFirstPage || isLastPage) {
+          // Always show first and last page
+          visiblePages.add(1);
+          visiblePages.add(totalPage);
+
+          // Add current page and 4 pages before and after
+          for (
+            let i = Math.max(2, page - 4);
+            i <= Math.min(totalPage - 1, page + 4);
+            i++
+          ) {
+            visiblePages.add(i);
+          }
+
+          // Convert to sorted array
+          const sortedPages = Array.from(visiblePages).sort((a, b) => a - b);
+
+          return sortedPages.map((pageNum, index) => {
+            const isCurrentPage = pageNum === page;
+
+            // Show ellipsis if there's a gap
+            if (index > 0 && sortedPages[index - 1] !== pageNum - 1) {
+              return (
+                <React.Fragment key={`${pageNum}-ellipsis`}>
+                  <span
+                    className="inline-flex items-center px-4 py-2 text-sm text-gray-700"
+                    aria-hidden="true"
+                  >
+                    ...
+                  </span>
+                  <button
+                    onClick={() => setPage(pageNum)}
+                    type="button"
+                    className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 ${
+                      isCurrentPage
+                        ? "bg-blue-600 text-white"
+                        : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
+                    }`}
+                    aria-current={isCurrentPage ? "page" : undefined}
+                    aria-label={`Page ${pageNum}`}
+                  >
+                    {pageNum}
+                  </button>
+                </React.Fragment>
+              );
+            }
+
             return (
               <button
-                key={i}
+                key={pageNum}
                 onClick={() => setPage(pageNum)}
                 type="button"
                 className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 ${
@@ -63,22 +106,8 @@ export const PaginationNav: React.FC<Props> = ({
                 {pageNum}
               </button>
             );
-          } else if (
-            (pageNum === page - 3 && pageNum > 2) ||
-            (pageNum === page + 3 && pageNum < totalPage - 1)
-          ) {
-            return (
-              <span
-                key={i}
-                className="inline-flex items-center px-4 py-2 text-sm text-gray-700"
-                aria-hidden="true"
-              >
-                ...
-              </span>
-            );
-          }
-          return null;
-        })}
+          });
+        })()}
       </div>
 
       <div className="md:hidden">
