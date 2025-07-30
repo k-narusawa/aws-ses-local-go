@@ -37,13 +37,13 @@ export const TableBody: React.FC<Props> = ({ emails, deleteEmail }) => {
                 <input
                   type="checkbox"
                   className="w-4 h-4 border-gray-300 rounded text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
-                  aria-label={`${email.subject}を選択`}
+                  aria-label={`Select ${email.subject}`}
                   onClick={(e) => e.stopPropagation()}
                 />
               </div>
             </td>
             <td className="px-6 py-4 text-sm font-medium text-gray-900 max-w-xs truncate">
-              {email.subject || "(件名なし)"}
+              {email.subject || "(No subject)"}
             </td>
             <td className="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">
               {email.from}
@@ -59,7 +59,7 @@ export const TableBody: React.FC<Props> = ({ emails, deleteEmail }) => {
                   e.stopPropagation();
                   onDelete(email.message_id);
                 }}
-                aria-label={`${email.subject}を削除`}
+                aria-label={`Delete ${email.subject}`}
               >
                 <svg
                   className="h-4 w-4 mr-1"
@@ -74,7 +74,7 @@ export const TableBody: React.FC<Props> = ({ emails, deleteEmail }) => {
                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                   />
                 </svg>
-                削除
+                Delete
               </button>
             </td>
           </tr>
@@ -84,22 +84,22 @@ export const TableBody: React.FC<Props> = ({ emails, deleteEmail }) => {
                 <div className="space-y-4">
                   <div>
                     <h4 className="text-sm font-medium text-gray-900 mb-2">
-                      テキスト本文:
+                      Text Content:
                     </h4>
                     <div className="bg-white rounded-md shadow-sm">
                       <pre className="p-4 text-sm text-gray-700 whitespace-pre-wrap">
-                        {email.body.text || "(本文なし)"}
+                        {email.body.text || "(No text content)"}
                       </pre>
                     </div>
                   </div>
                   <div>
                     <h4 className="text-sm font-medium text-gray-900 mb-2">
-                      HTML本文:
+                      HTML Content:
                     </h4>
                     <div
                       className="bg-white rounded-md shadow-sm p-4 prose prose-sm max-w-none"
                       dangerouslySetInnerHTML={{
-                        __html: email.body.html || "(HTML本文なし)",
+                        __html: email.body.html || "(No HTML content)",
                       }}
                     />
                   </div>

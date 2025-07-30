@@ -12,14 +12,14 @@ export const PaginationNav: React.FC<Props> = ({
   return (
     <nav
       className="flex items-center justify-center space-x-2"
-      aria-label="ページネーション"
+      aria-label="Pagination"
     >
       {page > 1 && (
         <button
           type="button"
           onClick={() => setPage(page - 1)}
           className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
-          aria-label="前のページ"
+          aria-label="Previous page"
         >
           <svg
             className="w-5 h-5 mr-1"
@@ -34,7 +34,7 @@ export const PaginationNav: React.FC<Props> = ({
               d="M15 19l-7-7 7-7"
             />
           </svg>
-          前へ
+          Previous
         </button>
       )}
 
@@ -58,7 +58,7 @@ export const PaginationNav: React.FC<Props> = ({
                     : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
                 }`}
                 aria-current={isCurrentPage ? "page" : undefined}
-                aria-label={`${pageNum}ページ目`}
+                aria-label={`Page ${pageNum}`}
               >
                 {pageNum}
               </button>
@@ -83,7 +83,7 @@ export const PaginationNav: React.FC<Props> = ({
 
       <div className="md:hidden">
         <span className="text-sm text-gray-700">
-          {page} / {totalPage} ページ
+          Page {page} of {totalPage}
         </span>
       </div>
 
@@ -92,9 +92,9 @@ export const PaginationNav: React.FC<Props> = ({
           type="button"
           onClick={() => setPage(page + 1)}
           className="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
-          aria-label="次のページ"
+          aria-label="Next page"
         >
-          次へ
+          Next
           <svg
             className="w-5 h-5 ml-1"
             fill="none"
