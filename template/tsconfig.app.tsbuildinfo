@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/emailtable.tsx","./src/components/paginationnav.tsx","./src/components/searchinput.tsx","./src/components/tablebody.tsx","./src/components/tableheader.tsx","./src/hooks/email.ts","./src/types/email.ts"],"version":"5.8.3"}
