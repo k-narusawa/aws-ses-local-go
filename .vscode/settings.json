@@ -13,7 +13,7 @@
   "go.formatFlags": [],
   "go.goroot": "",
   "go.gopath": "",
-  "go.inferGopath": true,
+  "go.inferGopath": false,
   "go.testFlags": ["-v"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": [

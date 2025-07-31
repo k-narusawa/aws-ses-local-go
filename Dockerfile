@@ -1,4 +1,4 @@
-FROM golang:1.22.3-alpine3.18 AS builder
+FROM public.ecr.aws/docker/library/golang:1.24.5-alpine AS builder
 
 RUN apk update && apk upgrade && \
     apk --update add git make bash build-base
