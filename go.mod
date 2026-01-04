@@ -1,6 +1,6 @@
 module aws-ses-local-go
 
-go 1.24.5
+go 1.25.5
 
 require (
 	github.com/aws/aws-sdk-go v1.55.5
