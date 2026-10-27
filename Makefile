@@ -18,7 +18,7 @@ test:
 
 build:
 	@ printf "Building aplication... "
-	@ go build \
+	@ CGO_ENABLED=0 go build \
 		-trimpath  \
 		-o engine \
 		./app/
@@ -29,6 +29,10 @@ dev-build:
 
 image-build:
 	docker build -t aws-ses-local-go .
+
+# ko でビルドしてローカルの Docker に読み込む (要: https://ko.build/install/)
+ko-build:
+	KO_DOCKER_REPO=ko.local/aws-ses-local-go ko build ./app --bare --platform=linux/$(shell go env GOARCH)
 
 cli-test:
 	bash scripts/check_v1_send_email.sh

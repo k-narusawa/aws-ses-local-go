@@ -9,6 +9,7 @@ import (
 	v1 "aws-ses-local-go/usecase/aws/v1"
 	v2 "aws-ses-local-go/usecase/aws/v2"
 	"aws-ses-local-go/usecase/mail"
+	"aws-ses-local-go/views"
 	"html/template"
 	"io"
 	"log"
@@ -28,18 +29,13 @@ const (
 func main() {
 	e := echo.New()
 
-	t := &Template{
-		templates: template.Must(template.ParseGlob("views/*.html")),
-	}
-	e.Static("/", "views")
+	registerViews(e)
 
 	e.Use(middleware.CORS())
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "[${time_rfc3339}] ${status} ${method} ${uri}  ${latency_human}\n",
 		Output: e.Logger.Output(),
 	}))
-
-	e.Renderer = t
 
 	db := config.DBConnect()
 
@@ -58,6 +54,14 @@ func main() {
 	e.GET("/health", healthCheck)
 
 	log.Fatal(e.Start(defaultAddress))
+}
+
+// フロントエンドの静的ファイルはバイナリに埋め込んだものを配信する
+func registerViews(e *echo.Echo) {
+	e.Renderer = &Template{
+		templates: template.Must(template.ParseFS(views.FS, "*.html")),
+	}
+	e.StaticFS("/", views.FS)
 }
 
 func healthCheck(c echo.Context) error {
