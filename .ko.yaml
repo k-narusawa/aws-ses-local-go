@@ -1,0 +1,17 @@
+# https://ko.build/configuration/
+# CGO を使わない静的バイナリなので distroless/static で動く (tzdata・CA 証明書入り)
+# root ユーザーで動くイメージを使い、従来どおりカレントディレクトリ (/) に ses.db を作成できるようにしている
+defaultBaseImage: gcr.io/distroless/static-debian12
+defaultPlatforms:
+  - linux/amd64
+  - linux/arm64
+
+builds:
+  - id: app
+    main: ./app
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w

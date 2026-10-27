@@ -1,10 +1,9 @@
 FROM public.ecr.aws/docker/library/golang:1.27.3-alpine AS builder
 
 RUN apk update && apk upgrade && \
-    apk --update add git make bash build-base
+    apk --update add make bash
 
-ENV GO111MODULE=on
-ENV CGO_ENABLED=1
+ENV CGO_ENABLED=0
 
 WORKDIR /app
 
@@ -23,6 +22,5 @@ WORKDIR /app
 EXPOSE 8080
 
 COPY --from=builder /app/engine /app/
-COPY --from=builder /app/views /app/views
 
 CMD /app/engine
